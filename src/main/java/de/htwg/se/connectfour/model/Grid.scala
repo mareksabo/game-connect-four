@@ -27,11 +27,11 @@ class Grid(val columns: Int, val rows: Int) {
 
   def setupCell(cell: Cell): Unit = cells(cell.x)(cell.y) = cell
 
-  def cell(x: Int, y: Int): Cell = cells(x)(y)
-
   def isCellValidAndNotEmpty(column: Int, row: Int): Boolean =
     isCellValid(column, row) &&
       cell(column, row).cellType != CellType.Empty
+
+  def cell(x: Int, y: Int): Cell = cells(x)(y)
 
   def isCellValid(column: Int, row: Int): Boolean =
     isColumnValid(column) && isRowValid(row)
@@ -42,15 +42,29 @@ class Grid(val columns: Int, val rows: Int) {
   def isRowValid(row: Int): Boolean =
     0 <= row && row <= MAX_ROW
 
-  def nicePrint(): String = {
+  def niceString(): String = {
+    val gridInString = buildGridInString()
+    addColumnNumbers(gridInString)
+  }
+
+  private[this] def buildGridInString(): String = {
     var result = "\n"
     for (y <- 0 until rows) {
       for (x <- 0 until columns) {
-        result += "| %1s ".format(cells(x)(y).symbol)
+        result += "|%2s ".format(cells(x)(y).symbol)
       }
       result += "|\n"
       result += "+---" * columns + "+\n"
     }
+    result
+  }
+
+  private[this] def addColumnNumbers(partialString: String): String = {
+    var result = partialString
+    for (x <- 0 until columns) {
+      result += "|%2s ".format(x)
+    }
+    result += "|\n"
     result
   }
 

@@ -1,20 +1,16 @@
 package de.htwg.se.connectfour
 
-import de.htwg.se.connectfour.logic.MoveLogic
-import de.htwg.se.connectfour.model.{Cell, CellType, Grid, Player}
+import de.htwg.se.connectfour.logic.Game
+import de.htwg.se.connectfour.model.{CellType, Player}
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val standardGrid = new Grid(7, 6)
-    standardGrid.setupCell(new Cell(0, 5, CellType.X))
-    standardGrid.setupCell(new Cell(6, 5, CellType.O))
 
-    val player1 = new Player("Marek", CellType.O, true)
-    val player2 = new Player("David", CellType.X, false)
+    val player1 = new Player("Marek", CellType.O)
+    val player2 = new Player("David", CellType.X)
 
-    val logic = new MoveLogic(standardGrid)
-    logic.addSymbolToColumn(4, CellType.O)
-    logic.addSymbolToColumn(4, CellType.X)
-    println(standardGrid.nicePrint())
+    val game = new Game(player1, player2)
+    game.startGame()
+
   }
 }

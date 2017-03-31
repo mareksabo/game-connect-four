@@ -1,5 +1,6 @@
 package de.htwg.se.connectfour
 
+import de.htwg.se.connectfour.logic.MoveLogic
 import de.htwg.se.connectfour.model.{Cell, CellType, Grid, Player}
 
 object Main {
@@ -11,6 +12,9 @@ object Main {
     val player1 = new Player("Marek", CellType.O, true)
     val player2 = new Player("David", CellType.X, false)
 
+    val logic = new MoveLogic(standardGrid)
+    logic.addSymbolToColumn(4, CellType.O)
+    logic.addSymbolToColumn(4, CellType.X)
     println(standardGrid.nicePrint())
   }
 }

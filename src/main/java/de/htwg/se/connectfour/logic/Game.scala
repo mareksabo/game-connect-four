@@ -25,7 +25,15 @@ class Game(val firstPlayer: Player, val secondPlayer: Player) {
   }
 
   def somebodyWon: Boolean = {
-    false // TODO: add for-each cycle check of 4 same symbols
+    if(logic.somebodyWon){
+      displayGrid()
+      changePlayer()
+      println(currentPlayer.name + " won")
+      true
+    }
+    else {
+      false
+    }
   }
 
   def processMove(): Unit = {

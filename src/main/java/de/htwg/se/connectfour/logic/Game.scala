@@ -1,12 +1,14 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{Grid, Player}
+import de.htwg.se.connectfour.model.{Cell, Grid, Player}
 
 class Game(val firstPlayer: Player, val secondPlayer: Player) {
 
   val grid = new Grid(7, 6)
   val logic = new MoveLogic(grid)
+  val checkWinner = new CheckWinner
   var isFirstGoing = true
+  var end = false
 
   def startGame(): Unit = {
     println("-- Welcome to the game --")
@@ -25,7 +27,7 @@ class Game(val firstPlayer: Player, val secondPlayer: Player) {
   }
 
   def somebodyWon: Boolean = {
-    if(logic.somebodyWon){
+    if(end){
       displayGrid()
       changePlayer()
       println(currentPlayer.name + " won")
@@ -42,6 +44,8 @@ class Game(val firstPlayer: Player, val secondPlayer: Player) {
       println("Column " + columnMove + " is invalid. Please try again.")
       columnMove = currentPlayer.getInput
     }
+    if(checkWinner.checkForWinner(grid, grid.cell(columnMove, logic.getLastRowPosition(columnMove))))
+      end = true
   }
 
   def currentPlayer: Player = if (isFirstGoing) firstPlayer else secondPlayer

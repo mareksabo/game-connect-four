@@ -23,7 +23,7 @@ class MoveLogic(val grid: Grid) {
     currentRow
   }
 
-  def getLastRowPosition(column: Int): Int ={
-    findLowestEmptyRow(column)+ 1
+  def getLastRowPosition(column: Int): Int = {
+    findLowestEmptyRow(column) + 1
   }
 }

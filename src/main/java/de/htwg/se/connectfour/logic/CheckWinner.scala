@@ -8,61 +8,50 @@ class CheckWinner(val grid: Grid) {
 
   def checkForWinner(cell: Cell): Boolean = {
     val checkRound = new CheckTurnWinner(cell)
-    checkRound.checkVertical() || checkRound.checkHorizontal() || checkRound.checkDiagonal()
+    checkRound.checkLine(CheckType.VERTICAL) || checkRound.checkLine(CheckType.HORIZONTAL) ||
+      checkRound.checkLine(CheckType.DIAGONAL_\) || checkRound.checkLine(CheckType.DIAGONAL_/)
+  }
+
+  private object CheckType extends Enumeration {
+    val VERTICAL, HORIZONTAL, DIAGONAL_/, DIAGONAL_\ = Value
   }
 
   private class CheckTurnWinner(val cell: Cell) {
 
-    def checkVertical(): Boolean = {
+    def checkLine(checkType: CheckType.Value): Boolean = {
       var winCounter = 0
-      for (i <- cell.y to cell.y + CELLS_AROUND_TO_WIN) {
-        if (grid.isCellValid(cell.x, cell.y + CELLS_AROUND_TO_WIN) && grid.cell(cell.x, i).cellType == cell.cellType)
-          winCounter += 1
-        else
-          winCounter = 0
+      var isCellValidAndSame = false
+      for (i <- -CELLS_AROUND_TO_WIN to +CELLS_AROUND_TO_WIN) {
+        isCellValidAndSame = processCheckType(i, checkType)
+        winCounter = increaseOrResetCounter(winCounter, isCellValidAndSame)
+        if (winCounter == NUMBER_OF_CELLS_TO_WIN) return true
       }
-      winCounter == NUMBER_OF_CELLS_TO_WIN
+      false
     }
 
-    def checkHorizontal(): Boolean = {
-      var winCounter = 0
-      for (i <- cell.x - CELLS_AROUND_TO_WIN to cell.x + CELLS_AROUND_TO_WIN) {
-        if (grid.isCellValid(i, cell.y) && (grid.cell(i, cell.y).cellType == cell.cellType))
-          winCounter += 1
-        else if (winCounter != NUMBER_OF_CELLS_TO_WIN)
-          winCounter = 0
+    def processCheckType(i: Int, checkType: CheckType.Value): Boolean = {
+      checkType match {
+        case CheckType.HORIZONTAL =>
+          isValidAndSameType(cell.x + i, cell.y)
+        case CheckType.VERTICAL =>
+          isValidAndSameType(cell.x, cell.y + i)
+        case CheckType.DIAGONAL_\ =>
+          isValidAndSameType(cell.x + i, cell.y + i)
+        case CheckType.DIAGONAL_/ =>
+          isValidAndSameType(cell.x - i, cell.y + i)
       }
-      winCounter == NUMBER_OF_CELLS_TO_WIN
     }
 
-    def checkDiagonal(): Boolean = {
-      leftUpToRightDown() || leftDownToRightUp()
+    def isValidAndSameType(x: Int, y: Int): Boolean = {
+      grid.isCellValid(x, y) && isCellSameType(x, y)
     }
 
-    def leftDownToRightUp(): Boolean = {
-      var winCounter = 0
-      for (i <- -CELLS_AROUND_TO_WIN to CELLS_AROUND_TO_WIN) {
-        {
-          if (grid.isCellValid(cell.x - i, cell.y + i) && grid.cell(cell.x - i, cell.y + i).cellType == cell.cellType)
-            winCounter += 1
-          else if (winCounter != NUMBER_OF_CELLS_TO_WIN)
-            winCounter = 0
-        }
-      }
-      winCounter == NUMBER_OF_CELLS_TO_WIN
+    private def isCellSameType(x: Int, y: Int): Boolean = {
+      grid.cell(x, y).cellType == cell.cellType
     }
 
-    def leftUpToRightDown(): Boolean = {
-      var winCounter = 0
-      for (i <- -CELLS_AROUND_TO_WIN to CELLS_AROUND_TO_WIN) {
-        {
-          if (grid.isCellValid(cell.x + i, cell.y + i) && grid.cell(cell.x + i, cell.y + i).cellType == cell.cellType) {
-            winCounter += 1
-          } else if (winCounter != NUMBER_OF_CELLS_TO_WIN)
-            winCounter = 0
-        }
-      }
-      winCounter == NUMBER_OF_CELLS_TO_WIN
+    def increaseOrResetCounter(oldValue: Int, shouldIncrease: Boolean): Int = {
+      if (shouldIncrease) oldValue + 1 else 0
     }
   }
 

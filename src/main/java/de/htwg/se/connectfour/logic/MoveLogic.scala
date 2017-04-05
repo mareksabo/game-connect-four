@@ -3,12 +3,12 @@ package de.htwg.se.connectfour.logic
 import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
 
 class MoveLogic(val grid: Grid) {
+  var somebodyWon = false
 
   def addSymbolToColumn(column: Int, cellType: CellType.Value): Boolean = {
     if (!grid.isColumnValid(column) || isColumnFull(column)) return false
     val freeRow = findLowestEmptyRow(column)
     grid.setupCell(new Cell(column, freeRow, cellType))
-
     true
   }
 

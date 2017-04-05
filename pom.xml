@@ -8,5 +8,11 @@
     <artifactId>connect-four</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2_2.12</artifactId>
+            <version>LATEST</version>
+        </dependency>
+    </dependencies>
 </project>

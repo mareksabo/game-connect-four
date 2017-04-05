@@ -9,6 +9,7 @@ package de.htwg.se.connectfour.model
   * +---+---+---+
   * |   | O |   |
   * +---+---+---+
+  * | 0 | 1 | 2 |
   *
   * @param columns represents width of grid (x coordinate, from 0 to columns - 1)
   * @param rows    represents height of grid (y coordinate, from 0 to rows - 1)

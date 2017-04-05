@@ -6,7 +6,7 @@ class Game(val firstPlayer: Player, val secondPlayer: Player) {
 
   val grid = new Grid(7, 6)
   val logic = new MoveLogic(grid)
-  val checkWinner = new CheckWinner
+  val checkWinner = new CheckWinner(grid)
   var isFirstGoing = true
   var end = false
 
@@ -44,7 +44,7 @@ class Game(val firstPlayer: Player, val secondPlayer: Player) {
       println("Column " + columnMove + " is invalid. Please try again.")
       columnMove = currentPlayer.getInput
     }
-    if (checkWinner.checkForWinner(grid, grid.cell(columnMove, logic.getLastRowPosition(columnMove))))
+    if (checkWinner.checkForWinner(grid.cell(columnMove, logic.getLastRowPosition(columnMove))))
       end = true
   }
 

@@ -5,7 +5,7 @@ import scala.io.StdIn
 
 class Player(val name: String, val _cellType: CellType.Value) {
 
-  def getInput: Int = {
+  def readInput(): Int = {
     print("Player " + name + ", write column number: ")
     StdIn.readInt()
   }

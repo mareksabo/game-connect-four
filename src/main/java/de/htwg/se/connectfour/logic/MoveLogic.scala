@@ -3,13 +3,17 @@ package de.htwg.se.connectfour.logic
 import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
 
 class MoveLogic(val grid: Grid) {
-  var somebodyWon = false
 
-  def addSymbolToColumn(column: Int, cellType: CellType.Value): Boolean = {
-    if (!grid.isColumnValid(column) || isColumnFull(column)) return false
-    val freeRow = findLowestEmptyRow(column)
-    grid.setupCell(new Cell(column, freeRow, cellType))
-    true
+  def checkAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
+    if (isColumnValidAndNotFull(column)) {
+      addSymbolToColumn(column, cellType)
+      return true
+    }
+    false
+  }
+
+  def isColumnValidAndNotFull(column: Int) : Boolean = {
+    grid.isColumnValid(column) && !isColumnFull(column)
   }
 
   private[this] def isColumnFull(column: Int): Boolean =
@@ -23,7 +27,12 @@ class MoveLogic(val grid: Grid) {
     currentRow
   }
 
-  def getLastRowPosition(column: Int): Int = {
+  private[this] def addSymbolToColumn(column: Int, cellType: CellType.Value): Unit = {
+    val freeRow = findLowestEmptyRow(column)
+    grid.setupCell(new Cell(column, freeRow, cellType))
+  }
+
+  def findLastRowPosition(column: Int): Int = {
     findLowestEmptyRow(column) + 1
   }
 }

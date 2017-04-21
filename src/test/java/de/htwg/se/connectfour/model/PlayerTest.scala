@@ -15,7 +15,7 @@ class PlayerTest extends Specification {
       val input = number + "\n"
       System.setIn(new ByteArrayInputStream(input.getBytes))
 
-      val readInput = player.getInput
+      val readInput = player.readInput()
       number must be_==(readInput)
     }
 

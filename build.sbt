@@ -1,3 +1,10 @@
+name          := "Connect four game"
+organization  := "de.htwg.se"
+version       := "1.0"
+scalaVersion  := "2.11.8"
+scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
+
+resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= {
   // specs2 3.7 is the last version to use scalacheck 1.12.5

@@ -2,7 +2,6 @@ package de.htwg.se.connectfour.model
 
 import org.specs2.mutable.Specification
 
-
 class CellTest extends Specification {
 
   "A new Cell" should {
@@ -17,7 +16,7 @@ class CellTest extends Specification {
     }
 
     "generates a string of the form [4, 3] cellType=X" in {
-      new Cell(4,3, CellType.X).toString must be_==("[4, 3] cellType=X")
+      new Cell(4, 3, CellType.X).toString must be_==("[4, 3] cellType=X")
     }
 
   }

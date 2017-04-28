@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{GamingPlayers, Grid}
+import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
 
 class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
 

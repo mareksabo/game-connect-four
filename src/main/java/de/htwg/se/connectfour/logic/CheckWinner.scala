@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{Cell, Grid}
+import de.htwg.se.connectfour.model.{ Cell, Grid }
 
 class CheckWinner(val grid: Grid) {
   val NUMBER_OF_CELLS_TO_WIN = 4

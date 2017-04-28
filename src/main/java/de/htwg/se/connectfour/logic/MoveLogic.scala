@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
+import de.htwg.se.connectfour.model.{ Cell, CellType, Grid }
 
 class MoveLogic(val grid: Grid) {
 
@@ -12,7 +12,7 @@ class MoveLogic(val grid: Grid) {
     false
   }
 
-  def isColumnValidAndNotFull(column: Int) : Boolean = {
+  def isColumnValidAndNotFull(column: Int): Boolean = {
     grid.isColumnValid(column) && !isColumnFull(column)
   }
 

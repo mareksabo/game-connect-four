@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{GamingPlayers, Grid}
+import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
 
 class Game(val gamePlayers: GamingPlayers) {
 
@@ -19,7 +19,7 @@ class Game(val gamePlayers: GamingPlayers) {
     output.congratulateWinner()
   }
 
-  def processTurn() : Int = {
+  def processTurn(): Int = {
     output.displayGridWithMessage()
     loadValidMove()
   }

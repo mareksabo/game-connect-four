@@ -1,10 +1,8 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.GamingPlayers
+import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
 
-class PrintGame(game: Game) {
-
-  val gamePlayers: GamingPlayers = game.gamePlayers
+class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
 
   def welcomePlayers(): Unit = {
     println("-- Welcome to the game --")
@@ -16,7 +14,7 @@ class PrintGame(game: Game) {
   }
 
   def displayGrid(): Unit = {
-    println(game.grid.niceString())
+    println(grid.niceString())
   }
 
   private def displayGoingMessage(): Unit = {

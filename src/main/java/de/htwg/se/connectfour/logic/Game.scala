@@ -1,12 +1,12 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{GamingPlayers, Grid}
+import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
 
 class Game(val gamePlayers: GamingPlayers) {
 
   val grid = new Grid(7, 6)
   val logic = new MoveLogic(grid)
-  val output = new PrintGame(this)
+  val output = new PrintGame(grid, gamePlayers)
   val checkWinner = new CheckWinner(grid)
 
   def startGame(): Unit = {
@@ -19,7 +19,7 @@ class Game(val gamePlayers: GamingPlayers) {
     output.congratulateWinner()
   }
 
-  def processTurn() : Int = {
+  def processTurn(): Int = {
     output.displayGridWithMessage()
     loadValidMove()
   }

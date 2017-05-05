@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour
 
 import de.htwg.se.connectfour.logic.Game
-import de.htwg.se.connectfour.model.{CellType, GamingPlayers, Player}
+import de.htwg.se.connectfour.model.{ CellType, GamingPlayers, Player }
 
 object Main {
   def main(args: Array[String]): Unit = {

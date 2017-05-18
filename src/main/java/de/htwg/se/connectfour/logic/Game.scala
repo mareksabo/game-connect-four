@@ -1,6 +1,8 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
+import de.htwg.se.connectfour.command.Invoker
+import de.htwg.se.connectfour.model.Grid
+import de.htwg.se.connectfour.player.GamingPlayers
 
 class Game(val gamePlayers: GamingPlayers) {
 
@@ -11,12 +13,24 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def startGame(): Unit = {
     output.welcomePlayers()
+    playGame()
+    undoMoves()
+    playGame()
+  }
+
+  def playGame(): Unit = {
     var usersMove = processTurn()
     while (!isMoveWinning(usersMove)) {
       gamePlayers.changePlayer()
       usersMove = processTurn()
     }
     output.congratulateWinner()
+  }
+
+  def undoMoves(): Unit = {
+    for (_ <- 1 to output.getUndoMovesCount()) {
+      Invoker.undo()
+    }
   }
 
   def processTurn(): Int = {
@@ -26,10 +40,10 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
-    var columnMove = currentPlayer.readInput()
-    while (!logic.checkAndAddCell(columnMove, currentPlayer._cellType)) {
+    var columnMove = currentPlayer.playTurn(grid)
+    while (!logic.checkAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
       output.wrongMove(columnMove)
-      columnMove = currentPlayer.readInput()
+      columnMove = currentPlayer.playTurn(grid)
     }
     columnMove
   }

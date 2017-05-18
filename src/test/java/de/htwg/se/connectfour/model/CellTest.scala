@@ -16,7 +16,7 @@ class CellTest extends Specification {
     }
 
     "generates a string of the form [4, 3] cellType=X" in {
-      new Cell(4, 3, CellType.X).toString must be_==("[4, 3] cellType=X")
+      new Cell(4, 3, CellType.FIRST).toString must be_==("[4, 3] cellType=FIRST")
     }
 
   }

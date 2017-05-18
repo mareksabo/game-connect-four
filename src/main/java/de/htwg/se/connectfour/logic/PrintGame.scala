@@ -1,6 +1,9 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
+import de.htwg.se.connectfour.model.Grid
+import de.htwg.se.connectfour.player.GamingPlayers
+
+import scala.io.StdIn
 
 class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
 
@@ -31,4 +34,10 @@ class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
   def wrongMove(columnMove: Int): Unit = {
     println("Column " + columnMove + " is invalid. Please try again.")
   }
+
+  def getUndoMovesCount(): Int = {
+    print("How many moves should I undo: ")
+    StdIn.readInt()
+  }
+
 }

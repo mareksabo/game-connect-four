@@ -1,9 +1,11 @@
 package de.htwg.se.connectfour.logic
 
 import de.htwg.se.connectfour.command.{Invoker, PlayedColumn}
-import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
+import de.htwg.se.connectfour.model.{Cell, CellType, SingletonGrid, Grid}
 
-class MoveLogic(val grid: Grid) {
+class MoveLogic() {
+
+  val grid: Grid = SingletonGrid.getGrid
 
   def checkAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
     if (isColumnValidAndNotFull(column)) {

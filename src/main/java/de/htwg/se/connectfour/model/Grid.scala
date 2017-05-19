@@ -15,15 +15,18 @@ package de.htwg.se.connectfour.model
   * @param rows    represents height of grid (y coordinate, from 0 to rows - 1)
   *
   */
-class Grid private[model] (val columns: Int, val rows: Int) {
+class Grid private[model](val columns: Int, val rows: Int) {
 
   val MAX_COLUMN: Int = columns - 1
   val MAX_ROW: Int = rows - 1
 
   private val cells: Array[Array[Cell]] = Array.ofDim[Cell](columns, rows)
+  emptyGrid()
 
-  for (row <- 0 until rows; column <- 0 until columns) {
-    cells(column)(row) = new Cell(column, row)
+  def emptyGrid(): Unit = {
+    for (row <- 0 until rows; column <- 0 until columns) {
+      cells(column)(row) = new Cell(column, row)
+    }
   }
 
   def setupCell(cell: Cell): Unit = cells(cell.x)(cell.y) = cell
@@ -42,6 +45,13 @@ class Grid private[model] (val columns: Int, val rows: Int) {
 
   def isRowValid(row: Int): Boolean =
     0 <= row && row <= MAX_ROW
+
+  def isFull: Boolean = {
+    for (row <- 0 until rows; column <- 0 until columns) {
+      if (cells(column)(row).cellType == CellType.Empty) return false
+    }
+    true
+  }
 
   def niceString(): String = {
     val gridInString = buildGridInString()

@@ -5,7 +5,7 @@ object SingletonGrid {
   val DEFAULT_ROWS = 7
   val DEFAULT_COLUMNS = 6
 
-  val grid = new Grid(DEFAULT_ROWS, DEFAULT_COLUMNS)
+  private val grid = new Grid(DEFAULT_ROWS, DEFAULT_COLUMNS)
 
   def getGrid: Grid = grid
 }

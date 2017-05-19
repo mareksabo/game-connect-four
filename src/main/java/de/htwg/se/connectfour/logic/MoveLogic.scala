@@ -3,13 +3,13 @@ package de.htwg.se.connectfour.logic
 import de.htwg.se.connectfour.command.{Invoker, PlayedColumn}
 import de.htwg.se.connectfour.model.{Cell, CellType, SingletonGrid, Grid}
 
-class MoveLogic() {
+object MoveLogic {
 
   val grid: Grid = SingletonGrid.getGrid
 
   def checkAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
     if (isColumnValidAndNotFull(column)) {
-      Invoker.invoke(PlayedColumn(this, column))
+      Invoker.invoke(PlayedColumn(column))
       addSymbolToColumn(column, cellType)
       return true
     }

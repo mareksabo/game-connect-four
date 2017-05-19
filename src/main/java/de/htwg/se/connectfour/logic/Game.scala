@@ -7,7 +7,7 @@ import de.htwg.se.connectfour.player.GamingPlayers
 class Game(val gamePlayers: GamingPlayers) {
 
   val grid: Grid = SingletonGrid.getGrid
-  val logic = new MoveLogic()
+  val logic = MoveLogic
   val output = new PrintGame(gamePlayers)
   val checkWinner = new CheckWinner()
 

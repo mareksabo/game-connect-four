@@ -12,4 +12,6 @@ class RealPlayer(val name: String) extends Player {
     print("Player " + name + ", write column number: ")
     StdIn.readInt()
   }
+
+  override def isReal: Boolean = true
 }

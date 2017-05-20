@@ -7,13 +7,13 @@ object MoveLogic {
 
   val grid: Grid = SingletonGrid.getGrid
 
-  def checkAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
+  def isFullAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
     if (isColumnValidAndNotFull(column)) {
       Invoker.invoke(PlayedColumn(column))
       addSymbolToColumn(column, cellType)
-      return true
+      return false
     }
-    false
+    true
   }
 
   def isColumnValidAndNotFull(column: Int): Boolean = {

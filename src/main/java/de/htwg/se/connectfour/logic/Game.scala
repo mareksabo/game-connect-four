@@ -39,7 +39,7 @@ class Game(val gamePlayers: GamingPlayers) {
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
     var columnMove = currentPlayer.playTurn()
-    while (!MoveLogic.checkAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
+    while (MoveLogic.isFullAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
       output.wrongMove(columnMove)
       columnMove = currentPlayer.playTurn()
     }

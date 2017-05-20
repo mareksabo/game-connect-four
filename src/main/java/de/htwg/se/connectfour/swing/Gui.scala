@@ -45,23 +45,34 @@ object Gui {
       buttons(i).addActionListener(new ActionListener() {
         def actionPerformed(e: ActionEvent): Unit = {
           val chosenColumn: Int = java.lang.Integer.parseInt(e.getActionCommand)
+          evaluateMove(chosenColumn)
 
-          val columnNotFull: Boolean = MoveLogic.checkAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
-          updateBoard()
-
-          if (columnNotFull) {
-            if (CheckWinner.isMoveWinning(chosenColumn)) showWon()
-            else if (grid.isFull) showDraw()
-
-            gamingPlayers.changePlayer()
-            frame.setTitle("Connect four - player " + gamingPlayers.currentPlayer.name)
-          } else {
-            JOptionPane.showMessageDialog(null, "Please choose another one.", "Column is filled", JOptionPane.INFORMATION_MESSAGE)
-          }
+          if (!gamingPlayers.currentPlayer.isReal) playBot()
         }
       })
       panel.add(buttons(i))
     }
+  }
+
+  def evaluateMove(chosenColumn: Int): Unit = {
+
+    val columnFull: Boolean = MoveLogic.isFullAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
+    updateBoard()
+
+    if (!columnFull) {
+      if (CheckWinner.isMoveWinning(chosenColumn)) showWon()
+      else if (grid.isFull) showDraw()
+
+      gamingPlayers.changePlayer()
+      frame.setTitle("Connect four - player " + gamingPlayers.currentPlayer.name)
+    } else {
+      JOptionPane.showMessageDialog(null, "Please choose another one.", "Column is filled", JOptionPane.INFORMATION_MESSAGE)
+    }
+  }
+
+  def playBot(): Unit = {
+      val robotsColumn = gamingPlayers.currentPlayer.playTurn()
+      evaluateMove(robotsColumn)
   }
 
   def setupSlots(): Unit = {

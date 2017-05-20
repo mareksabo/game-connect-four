@@ -1,13 +1,13 @@
 package de.htwg.se.connectfour.swing
 
-import java.awt._
 import java.awt.event.{ActionEvent, ActionListener}
-import javax.swing._
+import java.awt.{Color, GridLayout}
 import javax.swing.border.LineBorder
+import javax.swing.{JButton, JFrame, JLabel, JOptionPane, JPanel, SwingConstants}
 
 import de.htwg.se.connectfour.logic.{CheckWinner, MoveLogic}
 import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
-import de.htwg.se.connectfour.player.{GamingPlayers, RealPlayer}
+import de.htwg.se.connectfour.player.GamingPlayers
 
 object Gui {
   val grid: Grid = SingletonGrid.getGrid
@@ -19,9 +19,11 @@ object Gui {
   var slots: Array[Array[JLabel]] = Array.ofDim[JLabel](rows, columns)
   val buttons: Array[JButton] = new Array[JButton](rows)
 
-  val player1 = new RealPlayer("Marek")
-  val player2 = new RealPlayer("David")
-  val gamingPlayers = new GamingPlayers(player1, player2)
+  var gamingPlayers: GamingPlayers = _
+
+  def init(gamingPlayers: GamingPlayers): Unit = {
+    this.gamingPlayers = gamingPlayers
+  }
 
   setup()
 
@@ -48,7 +50,7 @@ object Gui {
           updateBoard()
 
           if (columnNotFull) {
-            if (isMoveWinning(chosenColumn)) showWon()
+            if (CheckWinner.isMoveWinning(chosenColumn)) showWon()
             else if (grid.isFull) showDraw()
 
             gamingPlayers.changePlayer()
@@ -82,11 +84,6 @@ object Gui {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   }
 
-  def isMoveWinning(columnMove: Int): Boolean = {
-    val rowMove = MoveLogic.findLastRowPosition(columnMove)
-    new CheckWinner().checkForWinner(grid.cell(columnMove, rowMove))
-  }
-
   def updateBoard(): Unit = {
     for (row <- 0 until rows; column <- 0 until columns) {
       updateCell(row, column)
@@ -102,7 +99,7 @@ object Gui {
       case CellType.SECOND =>
         slots(row)(column).setBackground(Color.blue)
       case CellType.Empty =>
-        // do nothing
+        slots(row)(column).setBackground(Color.white)
     }
   }
 

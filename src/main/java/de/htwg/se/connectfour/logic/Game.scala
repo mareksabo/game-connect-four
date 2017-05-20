@@ -7,9 +7,7 @@ import de.htwg.se.connectfour.player.GamingPlayers
 class Game(val gamePlayers: GamingPlayers) {
 
   val grid: Grid = SingletonGrid.getGrid
-  val logic = MoveLogic
   val output = new PrintGame(gamePlayers)
-  val checkWinner = new CheckWinner()
 
   def startGame(): Unit = {
     output.welcomePlayers()
@@ -20,7 +18,7 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def playGame(): Unit = {
     var usersMove = processTurn()
-    while (!isMoveWinning(usersMove)) {
+    while (!CheckWinner.isMoveWinning(usersMove)) {
       gamePlayers.changePlayer()
       usersMove = processTurn()
     }
@@ -41,16 +39,12 @@ class Game(val gamePlayers: GamingPlayers) {
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
     var columnMove = currentPlayer.playTurn()
-    while (!logic.checkAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
+    while (!MoveLogic.checkAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
       output.wrongMove(columnMove)
       columnMove = currentPlayer.playTurn()
     }
     columnMove
   }
 
-  def isMoveWinning(columnMove: Int): Boolean = {
-    val rowMove = logic.findLastRowPosition(columnMove)
-    checkWinner.checkForWinner(grid.cell(columnMove, rowMove))
-  }
 
 }

@@ -1,8 +1,11 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{ GamingPlayers, Grid }
+import de.htwg.se.connectfour.model.SingletonGrid
+import de.htwg.se.connectfour.player.GamingPlayers
 
-class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
+import scala.io.StdIn
+
+class PrintGame(gamePlayers: GamingPlayers) {
 
   def welcomePlayers(): Unit = {
     println("-- Welcome to the game --")
@@ -14,7 +17,7 @@ class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
   }
 
   def displayGrid(): Unit = {
-    println(grid.niceString())
+    println(SingletonGrid.getGrid.niceString())
   }
 
   private def displayGoingMessage(): Unit = {
@@ -31,4 +34,10 @@ class PrintGame(grid: Grid, gamePlayers: GamingPlayers) {
   def wrongMove(columnMove: Int): Unit = {
     println("Column " + columnMove + " is invalid. Please try again.")
   }
+
+  def getUndoMovesCount(): Int = {
+    print("How many moves should I undo: ")
+    StdIn.readInt()
+  }
+
 }

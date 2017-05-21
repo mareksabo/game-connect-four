@@ -1,15 +1,19 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{ Cell, CellType, Grid }
+import de.htwg.se.connectfour.command.{Invoker, PlayedColumn}
+import de.htwg.se.connectfour.model.{Cell, CellType, SingletonGrid, Grid}
 
-class MoveLogic(val grid: Grid) {
+object MoveLogic {
 
-  def checkAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
+  val grid: Grid = SingletonGrid.getGrid
+
+  def isFullAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
     if (isColumnValidAndNotFull(column)) {
+      Invoker.invoke(PlayedColumn(column))
       addSymbolToColumn(column, cellType)
-      return true
+      return false
     }
-    false
+    true
   }
 
   def isColumnValidAndNotFull(column: Int): Boolean = {
@@ -25,6 +29,10 @@ class MoveLogic(val grid: Grid) {
       currentRow -= 1
     }
     currentRow
+  }
+  def removeSymbolFromColumn(column: Int): Unit = {
+    val lastFilledRow = findLastRowPosition(column)
+    grid.setupCell(new Cell(column, lastFilledRow, CellType.Empty))
   }
 
   private[this] def addSymbolToColumn(column: Int, cellType: CellType.Value): Unit = {

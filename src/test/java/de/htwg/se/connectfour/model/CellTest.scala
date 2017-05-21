@@ -15,9 +15,5 @@ class CellTest extends Specification {
       cell.symbol must be_==(' ')
     }
 
-    "generates a string of the form [4, 3] cellType=X" in {
-      new Cell(4, 3, CellType.X).toString must be_==("[4, 3] cellType=X")
-    }
-
   }
 }

@@ -1,7 +1,7 @@
-name          := "Connect four game"
-organization  := "de.htwg.se"
-version       := "1.0"
-scalaVersion  := "2.11.8"
+name := "Connect four game"
+organization := "de.htwg.se"
+version := "1.0"
+scalaVersion := "2.11.8"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
 resolvers += Resolver.jcenterRepo
@@ -18,5 +18,6 @@ libraryDependencies ++= {
     "org.specs2" %% "specs2-scalacheck" % specs2Version
   )
 }
+libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
 scalacOptions in Test ++= Seq("-Yrangepos")

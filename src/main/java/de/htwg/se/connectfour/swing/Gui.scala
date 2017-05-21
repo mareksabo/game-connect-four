@@ -3,7 +3,7 @@ package de.htwg.se.connectfour.swing
 import java.awt.event.{ActionEvent, ActionListener}
 import java.awt.{Color, GridLayout}
 import javax.swing.border.LineBorder
-import javax.swing.{JButton, JFrame, JLabel, JOptionPane, JPanel, SwingConstants}
+import javax.swing.{JButton, JFrame, JLabel, JOptionPane, JPanel, SwingConstants, JMenuBar, JMenu, JMenuItem}
 
 import de.htwg.se.connectfour.logic.{CheckWinner, MoveLogic}
 import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
@@ -19,6 +19,15 @@ object Gui {
   var slots: Array[Array[JLabel]] = Array.ofDim[JLabel](rows, columns)
   val buttons: Array[JButton] = new Array[JButton](rows)
 
+  val menuBar: JMenuBar = new JMenuBar()
+  val menu: JMenu = new JMenu("menu")
+  val undo: JMenuItem = new JMenuItem("undo")
+  val redo: JMenuItem = new JMenuItem("redo")
+  val newGame: JMenuItem = new JMenuItem("new game")
+  val exit: JMenuItem = new JMenuItem("exit")
+
+
+
   var gamingPlayers: GamingPlayers = _
 
   def init(gamingPlayers: GamingPlayers): Unit = {
@@ -31,12 +40,33 @@ object Gui {
     panel.removeAll()
     panel.setLayout(new GridLayout(rows, columns + 1))
 
+    setupMenu()
     setupButtons()
     setupSlots()
     setupFrame()
 
     updateBoard()
   }
+
+  def setupMenu(): Unit ={
+    newGame.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent): Unit = {
+        startNewGame()
+      }
+    })
+    menu.add(newGame)
+    menu.add(undo)
+    menu.add(redo)
+    exit.addActionListener(new ActionListener {
+       def actionPerformed(e: ActionEvent): Unit = {
+         quit()
+       }
+    })
+    menu.add(exit)
+    menuBar.add(menu)
+
+  }
+
 
   def setupButtons(): Unit = {
     for (i <- 0 until rows) {
@@ -88,6 +118,7 @@ object Gui {
 
   def setupFrame(): Unit = {
     frame.setTitle("Connect four game")
+    frame.setJMenuBar(menuBar)
     frame.setContentPane(panel)
     frame.setSize(700, 600)
     frame.setVisible(true)

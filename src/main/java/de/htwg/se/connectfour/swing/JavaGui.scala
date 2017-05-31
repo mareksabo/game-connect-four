@@ -9,7 +9,7 @@ import de.htwg.se.connectfour.logic.{CheckWinner, MoveLogic}
 import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
 import de.htwg.se.connectfour.player.GamingPlayers
 
-object Gui {
+object JavaGui {
   val grid: Grid = SingletonGrid.getGrid
   val rows: Int = SingletonGrid.DEFAULT_ROWS
   val columns: Int = SingletonGrid.DEFAULT_COLUMNS

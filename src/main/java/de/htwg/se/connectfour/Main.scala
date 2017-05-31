@@ -2,7 +2,8 @@ package de.htwg.se.connectfour
 
 import de.htwg.se.connectfour.logic.Game
 import de.htwg.se.connectfour.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
-import de.htwg.se.connectfour.swing.Gui
+import de.htwg.se.connectfour.swing.JavaGui
+import de.htwg.se.connectfour.swing.ScalaGui
 
 import scala.io.StdIn
 
@@ -20,7 +21,8 @@ object Main {
     Console.print("Do you want to start gui (y/n): ")
     val input = StdIn.readLine()
     if (input.equalsIgnoreCase("y")) {
-      Gui.init(players)
+      val gui: ScalaGui = new ScalaGui
+      gui.init(players)
     } else {
       new Game(players).startGame()
     }

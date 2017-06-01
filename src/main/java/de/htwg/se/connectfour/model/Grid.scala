@@ -53,7 +53,7 @@ class Grid private[model](val columns: Int, val rows: Int) {
     true
   }
 
-  def niceString(): String = {
+  override def toString(): String = {
     val gridInString = buildGridInString()
     addColumnNumbers(gridInString)
   }
@@ -62,7 +62,7 @@ class Grid private[model](val columns: Int, val rows: Int) {
     var result = "\n"
     for (y <- 0 until rows) {
       for (x <- 0 until columns) {
-        result += "|%2s ".format(cells(x)(y).symbol)
+        result += "|%2s ".format(cells(x)(y))
       }
       result += "|\n"
       result += "+---" * columns + "+\n"

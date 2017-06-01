@@ -2,7 +2,7 @@ package de.htwg.se.connectfour.logic
 
 import de.htwg.se.connectfour.command.Invoker
 import de.htwg.se.connectfour.model.{Grid, SingletonGrid}
-import de.htwg.se.connectfour.player.GamingPlayers
+import de.htwg.se.connectfour.model.player.GamingPlayers
 
 class Game(val gamePlayers: GamingPlayers) {
 

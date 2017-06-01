@@ -8,8 +8,8 @@ class GridTest extends Specification {
 
     val grid = new Grid(3, 2)
 
-    val xCell = new Cell(2, 0, CellType.X)
-    val oCell = new Cell(0, 1, CellType.O)
+    val xCell = Cell(2, 0, CellType.X)
+    val oCell = Cell(0, 1, CellType.O)
     grid.setupCell(xCell)
     grid.setupCell(oCell)
 
@@ -38,7 +38,7 @@ class GridTest extends Specification {
           "| O |   |   |\n" +
           "+---+---+---+\n" +
           "| 0 | 1 | 2 |\n"
-      grid.niceString() must beEqualTo(expectedString)
+      grid.toString() must beEqualTo(expectedString)
     }
 
     "have valid and invalid columns" in {

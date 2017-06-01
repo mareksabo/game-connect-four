@@ -1,18 +1,17 @@
 package de.htwg.se.connectfour.model
 
-class Cell(val x: Int, val y: Int, val cellType: CellType.Value) {
+case class Cell(x: Int, y: Int, cellType: CellType.Value) {
 
   def this(x: Int, y: Int) {
     this(x, y, CellType.Empty)
   }
 
-  def symbol: Char = {
+  override def toString: String  = {
     cellType match {
-      case CellType.O => 'O'
-      case CellType.X => 'X'
-      case _ => ' '
+      case CellType.O => "O"
+      case CellType.X => "X"
+      case _ => " "
     }
   }
 
-  override def toString: String = s"[$x, $y] cellType=$cellType"
 }

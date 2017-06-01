@@ -7,7 +7,7 @@ import javax.swing.{JButton, JFrame, JLabel, JOptionPane, JPanel, SwingConstants
 
 import de.htwg.se.connectfour.logic.{CheckWinner, MoveLogic}
 import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
-import de.htwg.se.connectfour.player.GamingPlayers
+import de.htwg.se.connectfour.model.player.GamingPlayers
 
 object Gui {
   val grid: Grid = SingletonGrid.getGrid

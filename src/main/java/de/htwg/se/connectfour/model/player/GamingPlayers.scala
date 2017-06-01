@@ -1,8 +1,8 @@
-package de.htwg.se.connectfour.player
+package de.htwg.se.connectfour.model.player
 
 import de.htwg.se.connectfour.model.CellType
 
-class GamingPlayers(val firstPlayer: Player, val secondPlayer: Player) {
+case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) {
 
   private var _isFirstGoing = true
 

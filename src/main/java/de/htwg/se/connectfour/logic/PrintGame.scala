@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.logic
 
 import de.htwg.se.connectfour.model.SingletonGrid
-import de.htwg.se.connectfour.player.GamingPlayers
+import de.htwg.se.connectfour.model.player.GamingPlayers
 
 import scala.io.StdIn
 
@@ -17,7 +17,7 @@ class PrintGame(gamePlayers: GamingPlayers) {
   }
 
   def displayGrid(): Unit = {
-    println(SingletonGrid.getGrid.niceString())
+    println(SingletonGrid.getGrid)
   }
 
   private def displayGoingMessage(): Unit = {

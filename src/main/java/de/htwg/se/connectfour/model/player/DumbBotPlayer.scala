@@ -1,11 +1,11 @@
-package de.htwg.se.connectfour.player
+package de.htwg.se.connectfour.model.player
 
 import de.htwg.se.connectfour.logic.MoveLogic
 import de.htwg.se.connectfour.model.SingletonGrid
 
 import scala.util.Random
 
-class DumbBotPlayer extends Player {
+case class DumbBotPlayer() extends Player {
   override val name: String = "Dumb bot"
   val r = Random
 

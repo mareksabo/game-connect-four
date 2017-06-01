@@ -12,8 +12,9 @@ class CellTest extends Specification {
     }
 
     "the empty symbol must be a space" in {
-      cell.symbol must be_==(' ')
+      cell.toString must be_==(" ")
     }
+
 
   }
 }

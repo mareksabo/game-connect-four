@@ -1,8 +1,8 @@
-package de.htwg.se.connectfour.player
+package de.htwg.se.connectfour.model.player
 
 import scala.io.StdIn
 
-class RealPlayer(val name: String) extends Player {
+case class RealPlayer(name: String) extends Player {
 
   override def playTurn(): Int = {
     readInput()

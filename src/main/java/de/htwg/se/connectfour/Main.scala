@@ -20,7 +20,8 @@ object Main {
     Console.print("Do you want to start gui (y/n): ")
     val input = StdIn.readLine()
     if (input.equalsIgnoreCase("y")) {
-      Gui.init(players)
+      val gui: Gui = new Gui
+      gui.init(players)
     } else {
       new Game(players).startGame()
     }

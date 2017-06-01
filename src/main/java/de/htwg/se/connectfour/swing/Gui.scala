@@ -12,7 +12,7 @@ import scala.swing._
 /**
   * Created by Kuba on 31.05.2017.
   */
-class ScalaGui {
+class Gui {
   val WIDTH = 700
   val HEIGHT = 500
 

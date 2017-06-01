@@ -3,15 +3,14 @@ package de.htwg.se.connectfour.logic
 import de.htwg.se.connectfour.controller.GridController
 import de.htwg.se.connectfour.model.{Cell, Grid}
 
-class CheckWinner(val grid: Grid) {
-  val logic = new GridController(grid)
+class CheckWinner(val gridController: GridController) {
 
   val NUMBER_OF_CELLS_TO_WIN = 4
-
   val CELLS_AROUND_TO_WIN: Int = NUMBER_OF_CELLS_TO_WIN - 1
 
   def isMoveWinning(columnMove: Int): Boolean = {
-    val rowMove = logic.findLastRowPosition(columnMove)
+    val rowMove = gridController.findLastRowPosition(columnMove)
+    val grid = gridController.grid
     checkForWinner(grid.cell(columnMove, rowMove))
   }
 
@@ -26,6 +25,8 @@ class CheckWinner(val grid: Grid) {
   }
 
   private class CheckTurnWinner(val cell: Cell) {
+
+    val grid: Grid = gridController.grid
 
     def checkLine(checkType: CheckType.Value): Boolean = {
       var winCounter = 0

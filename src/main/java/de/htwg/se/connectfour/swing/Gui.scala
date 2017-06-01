@@ -7,16 +7,15 @@ import javax.swing.{JButton, JFrame, JLabel, JMenu, JMenuBar, JMenuItem, JOption
 
 import de.htwg.se.connectfour.controller.GridController
 import de.htwg.se.connectfour.logic.CheckWinner
+import de.htwg.se.connectfour.model.CellType
 import de.htwg.se.connectfour.model.player.GamingPlayers
-import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
 
-object Gui {
-  val grid: Grid = SingletonGrid.getGrid
-  val rows: Int = SingletonGrid.DEFAULT_ROWS
-  val columns: Int = SingletonGrid.DEFAULT_COLUMNS
+class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) {
+  val rows: Int = gridController.columnSize // row = columnSize = 7
+  val columns: Int = gridController.rowSize // TODO: resolve mixed row and column
 
-  val gridController = new GridController(grid)
-  val checkWinner = new CheckWinner(grid)
+//  val grid: Grid = gridController.grid
+  val checkWinner = new CheckWinner(gridController)
 
   val frame: JFrame = new JFrame()
   val panel: JPanel = frame.getContentPane.asInstanceOf[JPanel]
@@ -30,13 +29,6 @@ object Gui {
   val newGame: JMenuItem = new JMenuItem("new game")
   val exit: JMenuItem = new JMenuItem("exit")
 
-
-
-  var gamingPlayers: GamingPlayers = _
-
-  def init(gamingPlayers: GamingPlayers): Unit = {
-    this.gamingPlayers = gamingPlayers
-  }
 
   setup()
 
@@ -60,7 +52,21 @@ object Gui {
     })
     menu.add(newGame)
     menu.add(undo)
+    undo.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent): Unit = {
+        gridController.undo()
+        gamingPlayers.changePlayer() // TODO: don't change player when grid is empty
+        updateBoard()
+      }
+    })
     menu.add(redo)
+    redo.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent): Unit = {
+        gridController.redo()
+        gamingPlayers.changePlayer() // TODO: don't change player when grid is empty
+        updateBoard()
+      }
+    })
     exit.addActionListener(new ActionListener {
        def actionPerformed(e: ActionEvent): Unit = {
          quit()
@@ -95,7 +101,7 @@ object Gui {
 
     if (!columnFull) {
       if (checkWinner.isMoveWinning(chosenColumn)) showWon()
-      else if (grid.isFull) showDraw()
+      else if (gridController.isFull) showDraw()
 
       gamingPlayers.changePlayer()
       frame.setTitle("Connect four - player " + gamingPlayers.currentPlayer.name)
@@ -139,7 +145,7 @@ object Gui {
   def updateCell(row: Int, column: Int): Unit = {
     slots(row)(column).setOpaque(true)
 
-    grid.cell(row, column).cellType match {
+    gridController.cell(row, column).cellType match {
       case CellType.FIRST =>
         slots(row)(column).setBackground(Color.red)
       case CellType.SECOND =>
@@ -169,7 +175,7 @@ object Gui {
   }
 
   def startNewGame(): Unit = {
-    grid.emptyGrid()
+    gridController.createEmptyGrid(gridController.columnSize, gridController.rowSize)
     setup()
   }
 

@@ -10,7 +10,7 @@ import scala.swing.Publisher
 class GridController(var grid: Grid) extends Publisher {
 
   var gameStatus: GameStatus = _
-  private val undoManager = new RevertManager
+  private val revertManager = new RevertManager
 
 
   def createEmptyGrid(columns: Int, rows: Int): Unit = {
@@ -20,28 +20,28 @@ class GridController(var grid: Grid) extends Publisher {
   }
 
   def undo(): Unit = {
-    undoManager.undo()
+    revertManager.undo()
     gameStatus = StatusType.UNDO
     publish(new CellChanged)
   }
 
   def redo(): Unit = {
-    undoManager.redo()
+    revertManager.redo()
     gameStatus = StatusType.REDO
     publish(new CellChanged)
   }
 
-  def cell(row: Int, col: Int): Cell = grid.cell(row, col)
+  def cell(col: Int, row: Int): Cell = grid.cell(col, row)
 
-  def gridColumnSize: Int = grid.MAX_COLUMN
-  def gridRowSize: Int = grid.MAX_ROW
+  def columnSize: Int = grid.columns
+  def rowSize: Int = grid.rows
   def isFull: Boolean = grid.isFull
 
   def statusText: String = StatusType.message(gameStatus)
 
   def isFullAndAddCell(column: Int, cellType: CellType): Boolean = {
     if (isColumnValidAndNotFull(column)) {
-      undoManager.execute(PlayedColumn(column, findLowestEmptyRow(column), cellType, this))
+      revertManager.execute(PlayedColumn(column, findLowestEmptyRow(column), cellType, this))
       gameStatus = StatusType.SET
       return false
     }
@@ -70,7 +70,7 @@ class GridController(var grid: Grid) extends Publisher {
   }
 
   def set(col: Int, row: Int, value: CellType): Unit = {
-    undoManager.execute(PlayedColumn(col, row, value, this))
+    revertManager.execute(PlayedColumn(col, row, value, this))
     gameStatus = StatusType.SET
     publish(new CellChanged)
   }

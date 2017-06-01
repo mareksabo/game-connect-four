@@ -2,7 +2,6 @@ package de.htwg.se.connectfour
 
 import de.htwg.se.connectfour.logic.Game
 import de.htwg.se.connectfour.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
-import de.htwg.se.connectfour.swing.JavaGui
 import de.htwg.se.connectfour.swing.ScalaGui
 
 import scala.io.StdIn

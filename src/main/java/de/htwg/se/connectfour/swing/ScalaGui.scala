@@ -8,6 +8,7 @@ import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
 import de.htwg.se.connectfour.player.GamingPlayers
 
 import scala.swing._
+
 /**
   * Created by Kuba on 31.05.2017.
   */
@@ -24,13 +25,13 @@ class ScalaGui {
   var panel = new GridPanel(rows, columns + 1)
 
   var mainFrame = new MainFrame()
-  var menu = new MenuBar
 
   var gamingPlayers: GamingPlayers = _
 
   def init(gamingPlayers: GamingPlayers): Unit = {
     this.gamingPlayers = gamingPlayers
   }
+
   setup()
 
   def setup(): Unit = {
@@ -43,7 +44,6 @@ class ScalaGui {
     mainFrame.title = "connect-four"
     mainFrame.preferredSize = new Dimension(WIDTH, HEIGHT)
     mainFrame.contents = panel
-    mainFrame.menuBar = menu
     mainFrame.visible = true
     mainFrame.centerOnScreen()
   }
@@ -52,11 +52,11 @@ class ScalaGui {
   def setupPanel(): Unit = {
     setupButtons()
     setupSlots()
-    panel = new GridPanel(rows, columns + 1){
-      for (i <- 0 until rows){
+    panel = new GridPanel(rows, columns + 1) {
+      for (i <- 0 until rows) {
         contents += buttons(i)
       }
-      for (column <- 0 until columns-1; row <- 0 until rows) {
+      for (column <- 0 until columns - 1; row <- 0 until rows) {
         contents += slots(row)(column)
       }
     }
@@ -64,27 +64,28 @@ class ScalaGui {
   }
 
   def setupMenuBar(): Unit = {
-    menu = new MenuBar {
+    val menu = new MenuBar {
       contents += new Menu("menu") {
         contents += new MenuItem(Action("new game") {
           startNewGame()
         })
-        contents += new MenuItem(Action("undo"){
+        contents += new MenuItem(Action("undo") {
         })
-        contents += new MenuItem(Action("redo"){
+        contents += new MenuItem(Action("redo") {
         })
-        contents += new MenuItem(Action("exit"){
+        contents += new MenuItem(Action("exit") {
           quit()
         })
       }
-      }
+    }
+    mainFrame.menuBar = new MenuBar
   }
 
   def setupButtons(): Unit = {
     for (i <- 0 until rows) {
       val chosenColumn: Int = i
       buttons(i) = Button(String.valueOf(i + 1))(
-          buttonAction(chosenColumn)
+        buttonAction(chosenColumn)
       )
 
     }
@@ -99,7 +100,7 @@ class ScalaGui {
   def setupSlots(): Unit = {
 
     for (column <- 0 until columns; row <- 0 until rows) {
-      slots(row)(column) = new Label{
+      slots(row)(column) = new Label {
         opaque = true
         horizontalAlignment
         border = Swing.LineBorder(Color.BLACK, 2)
@@ -145,7 +146,7 @@ class ScalaGui {
 
   def showWon(): Unit = {
     val winner: String = "Player " + gamingPlayers.currentPlayer.name + " has won"
-    val option = Dialog.showConfirmation(null, "Play a new game?", optionType = Dialog.Options.YesNo, title=winner)
+    val option = Dialog.showConfirmation(null, "Play a new game?", optionType = Dialog.Options.YesNo, title = winner)
     startNewOrQuit(option == Dialog.Result.Ok)
   }
 

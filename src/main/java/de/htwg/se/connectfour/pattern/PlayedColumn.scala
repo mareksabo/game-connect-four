@@ -1,19 +1,19 @@
 package de.htwg.se.connectfour.pattern
 
-import de.htwg.se.connectfour.logic.MoveLogic
+import de.htwg.se.connectfour.controller.GridController
+import de.htwg.se.connectfour.model.CellType
+import de.htwg.se.connectfour.model.CellType.CellType
 
-case class PlayedColumn(playedColumn: Int) extends Command {
+case class PlayedColumn(col: Int, row: Int, cellType: CellType, gridController: GridController) extends Command {
 
   override def execute(): Unit = {
-    // TODO: add logic from MoveLogic class
+    gridController.grid.set(col, row, cellType)
   }
 
   override def undo(): Unit = {
-    new MoveLogic().removeSymbolFromColumn(playedColumn)
+    gridController.grid.set(col, row, CellType.EMPTY)
   }
 
-  override def redo(): Unit = ???
-
-  override def toString = s"$playedColumn "
+  override def redo(): Unit = execute()
 
 }

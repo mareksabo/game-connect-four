@@ -1,5 +1,7 @@
 package de.htwg.se.connectfour.model
 
+import de.htwg.se.connectfour.model.CellType.CellType
+
 /**
   * Gaming 2D grid with starting coordinates in left upper corner.
   *
@@ -15,10 +17,12 @@ package de.htwg.se.connectfour.model
   * @param rows    represents height of grid (y coordinate, from 0 to rows - 1)
   *
   */
-class Grid (val columns: Int, val rows: Int) {
+class Grid(val columns: Int, val rows: Int) {
 
   val MAX_COLUMN: Int = columns - 1
   val MAX_ROW: Int = rows - 1
+
+  def this() = this(7, 6)
 
   private val cells: Array[Array[Cell]] = Array.ofDim[Cell](columns, rows)
   emptyGrid()
@@ -29,11 +33,13 @@ class Grid (val columns: Int, val rows: Int) {
     }
   }
 
+  def set(x: Int, y: Int, cellType: CellType): Unit = cells(x)(y) = Cell(x, y, cellType)
+
   def setupCell(cell: Cell): Unit = cells(cell.x)(cell.y) = cell
 
   def isCellValidAndNotEmpty(column: Int, row: Int): Boolean =
     isCellValid(column, row) &&
-      cell(column, row).cellType != CellType.Empty
+      cell(column, row).cellType != CellType.EMPTY
 
   def cell(x: Int, y: Int): Cell = cells(x)(y)
 
@@ -48,7 +54,7 @@ class Grid (val columns: Int, val rows: Int) {
 
   def isFull: Boolean = {
     for (row <- 0 until rows; column <- 0 until columns) {
-      if (cells(column)(row).cellType == CellType.Empty) return false
+      if (cells(column)(row).cellType == CellType.EMPTY) return false
     }
     true
   }

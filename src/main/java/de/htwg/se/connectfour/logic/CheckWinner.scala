@@ -1,14 +1,15 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.{Cell, Grid, SingletonGrid}
+import de.htwg.se.connectfour.controller.GridController
+import de.htwg.se.connectfour.model.{Cell, Grid}
 
-object CheckWinner {
-  val grid: Grid = SingletonGrid.getGrid
-  val logic = new MoveLogic()
+class CheckWinner(val grid: Grid) {
+  val logic = new GridController(grid)
 
   val NUMBER_OF_CELLS_TO_WIN = 4
 
   val CELLS_AROUND_TO_WIN: Int = NUMBER_OF_CELLS_TO_WIN - 1
+
   def isMoveWinning(columnMove: Int): Boolean = {
     val rowMove = logic.findLastRowPosition(columnMove)
     checkForWinner(grid.cell(columnMove, rowMove))

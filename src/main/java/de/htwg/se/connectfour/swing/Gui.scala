@@ -3,16 +3,20 @@ package de.htwg.se.connectfour.swing
 import java.awt.event.{ActionEvent, ActionListener}
 import java.awt.{Color, GridLayout}
 import javax.swing.border.LineBorder
-import javax.swing.{JButton, JFrame, JLabel, JOptionPane, JPanel, SwingConstants, JMenuBar, JMenu, JMenuItem}
+import javax.swing.{JButton, JFrame, JLabel, JMenu, JMenuBar, JMenuItem, JOptionPane, JPanel, SwingConstants}
 
-import de.htwg.se.connectfour.logic.{CheckWinner, MoveLogic}
-import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
+import de.htwg.se.connectfour.controller.GridController
+import de.htwg.se.connectfour.logic.CheckWinner
 import de.htwg.se.connectfour.model.player.GamingPlayers
+import de.htwg.se.connectfour.model.{CellType, Grid, SingletonGrid}
 
 object Gui {
   val grid: Grid = SingletonGrid.getGrid
   val rows: Int = SingletonGrid.DEFAULT_ROWS
   val columns: Int = SingletonGrid.DEFAULT_COLUMNS
+
+  val gridController = new GridController(grid)
+  val checkWinner = new CheckWinner(grid)
 
   val frame: JFrame = new JFrame()
   val panel: JPanel = frame.getContentPane.asInstanceOf[JPanel]
@@ -86,11 +90,11 @@ object Gui {
 
   def evaluateMove(chosenColumn: Int): Unit = {
 
-    val columnFull: Boolean = new MoveLogic().isFullAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
+    val columnFull: Boolean = gridController.isFullAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
     updateBoard()
 
     if (!columnFull) {
-      if (CheckWinner.isMoveWinning(chosenColumn)) showWon()
+      if (checkWinner.isMoveWinning(chosenColumn)) showWon()
       else if (grid.isFull) showDraw()
 
       gamingPlayers.changePlayer()
@@ -140,7 +144,7 @@ object Gui {
         slots(row)(column).setBackground(Color.red)
       case CellType.SECOND =>
         slots(row)(column).setBackground(Color.blue)
-      case CellType.Empty =>
+      case CellType.EMPTY =>
         slots(row)(column).setBackground(Color.white)
     }
   }

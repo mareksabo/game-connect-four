@@ -1,6 +1,7 @@
 package de.htwg.se.connectfour.model.player
 
 import de.htwg.se.connectfour.model.CellType
+import de.htwg.se.connectfour.model.CellType.CellType
 
 case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) {
 
@@ -16,7 +17,7 @@ case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) {
 
   def currentPlayerCellType(): CellType.Value = cellType(currentPlayer)
 
-  private[this] def cellType(player: Player): CellType.Value = {
+  private[this] def cellType(player: Player): CellType = {
     if (player == firstPlayer) CellType.FIRST else CellType.SECOND
   }
 }

@@ -1,11 +1,13 @@
 package de.htwg.se.connectfour.logic
 
+import de.htwg.se.connectfour.controller.GridController
 import de.htwg.se.connectfour.model.player.GamingPlayers
 import de.htwg.se.connectfour.model.{Grid, SingletonGrid}
 
 class Game(val gamePlayers: GamingPlayers) {
 
   val grid: Grid = SingletonGrid.getGrid
+  val gridController = new GridController(grid)
   val output = new PrintGame(gamePlayers)
 
   def startGame(): Unit = {
@@ -17,7 +19,7 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def playGame(): Unit = {
     var usersMove = processTurn()
-    while (!CheckWinner.isMoveWinning(usersMove)) {
+    while (!new CheckWinner(grid).isMoveWinning(usersMove)) {
       gamePlayers.changePlayer()
       usersMove = processTurn()
     }
@@ -38,7 +40,7 @@ class Game(val gamePlayers: GamingPlayers) {
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
     var columnMove = currentPlayer.playTurn()
-    while (new MoveLogic().isFullAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
+    while (gridController.isFullAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
       output.wrongMove(columnMove)
       columnMove = currentPlayer.playTurn()
     }

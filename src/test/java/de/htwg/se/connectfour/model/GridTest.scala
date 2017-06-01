@@ -8,15 +8,15 @@ class GridTest extends Specification {
 
     val grid = new Grid(3, 2)
 
-    val xCell = Cell(2, 0, CellType.X)
-    val oCell = Cell(0, 1, CellType.O)
+    val xCell = Cell(2, 0, CellType.SECOND)
+    val oCell = Cell(0, 1, CellType.FIRST)
     grid.setupCell(xCell)
     grid.setupCell(oCell)
 
     "another new grid should be empty" in {
       val localGrid = new Grid(7, 6)
       for (i <- 0 to localGrid.MAX_COLUMN; j <- 0 to localGrid.MAX_ROW) {
-        localGrid.cell(i, j).cellType must be_==(CellType.Empty)
+        localGrid.cell(i, j).cellType must be_==(CellType.EMPTY)
       }
       ok
     }

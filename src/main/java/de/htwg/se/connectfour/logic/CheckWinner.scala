@@ -4,12 +4,13 @@ import de.htwg.se.connectfour.model.{Cell, Grid, SingletonGrid}
 
 object CheckWinner {
   val grid: Grid = SingletonGrid.getGrid
+  val logic = new MoveLogic()
 
   val NUMBER_OF_CELLS_TO_WIN = 4
-  val CELLS_AROUND_TO_WIN: Int = NUMBER_OF_CELLS_TO_WIN - 1
 
+  val CELLS_AROUND_TO_WIN: Int = NUMBER_OF_CELLS_TO_WIN - 1
   def isMoveWinning(columnMove: Int): Boolean = {
-    val rowMove = MoveLogic.findLastRowPosition(columnMove)
+    val rowMove = logic.findLastRowPosition(columnMove)
     checkForWinner(grid.cell(columnMove, rowMove))
   }
 

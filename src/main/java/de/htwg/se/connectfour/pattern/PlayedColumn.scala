@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.command
+package de.htwg.se.connectfour.pattern
 
 import de.htwg.se.connectfour.logic.MoveLogic
 
@@ -9,8 +9,11 @@ case class PlayedColumn(playedColumn: Int) extends Command {
   }
 
   override def undo(): Unit = {
-    MoveLogic.removeSymbolFromColumn(playedColumn)
+    new MoveLogic().removeSymbolFromColumn(playedColumn)
   }
 
+  override def redo(): Unit = ???
+
   override def toString = s"$playedColumn "
+
 }

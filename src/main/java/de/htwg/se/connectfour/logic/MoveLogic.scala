@@ -1,15 +1,16 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.command.{Invoker, PlayedColumn}
-import de.htwg.se.connectfour.model.{Cell, CellType, SingletonGrid, Grid}
+import de.htwg.se.connectfour.model.{Cell, CellType, Grid, SingletonGrid}
+import de.htwg.se.connectfour.pattern.{PlayedColumn, UndoManager}
 
-object MoveLogic {
+class MoveLogic {
 
   val grid: Grid = SingletonGrid.getGrid
+  val undoManager = new UndoManager
 
   def isFullAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
     if (isColumnValidAndNotFull(column)) {
-      Invoker.invoke(PlayedColumn(column))
+      undoManager.execute(PlayedColumn(column))
       addSymbolToColumn(column, cellType)
       return false
     }
@@ -32,12 +33,12 @@ object MoveLogic {
   }
   def removeSymbolFromColumn(column: Int): Unit = {
     val lastFilledRow = findLastRowPosition(column)
-    grid.setupCell(new Cell(column, lastFilledRow, CellType.Empty))
+    grid.setupCell(Cell(column, lastFilledRow, CellType.Empty))
   }
 
   private[this] def addSymbolToColumn(column: Int, cellType: CellType.Value): Unit = {
     val freeRow = findLowestEmptyRow(column)
-    grid.setupCell(new Cell(column, freeRow, cellType))
+    grid.setupCell(Cell(column, freeRow, cellType))
   }
 
   def findLastRowPosition(column: Int): Int = {

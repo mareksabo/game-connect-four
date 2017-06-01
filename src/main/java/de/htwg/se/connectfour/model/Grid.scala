@@ -15,7 +15,7 @@ package de.htwg.se.connectfour.model
   * @param rows    represents height of grid (y coordinate, from 0 to rows - 1)
   *
   */
-class Grid private[model](val columns: Int, val rows: Int) {
+class Grid (val columns: Int, val rows: Int) {
 
   val MAX_COLUMN: Int = columns - 1
   val MAX_ROW: Int = rows - 1
@@ -53,7 +53,7 @@ class Grid private[model](val columns: Int, val rows: Int) {
     true
   }
 
-  override def toString(): String = {
+  override def toString: String = {
     val gridInString = buildGridInString()
     addColumnNumbers(gridInString)
   }

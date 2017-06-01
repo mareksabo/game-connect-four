@@ -86,7 +86,7 @@ object Gui {
 
   def evaluateMove(chosenColumn: Int): Unit = {
 
-    val columnFull: Boolean = MoveLogic.isFullAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
+    val columnFull: Boolean = new MoveLogic().isFullAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
     updateBoard()
 
     if (!columnFull) {

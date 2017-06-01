@@ -14,7 +14,7 @@ case class DumbBotPlayer() extends Player {
     if (SingletonGrid.getGrid.isFull) return -1
     do {
     robotsColumn = r.nextInt(SingletonGrid.getGrid.columns)
-    } while (!MoveLogic.isColumnValidAndNotFull(robotsColumn))
+    } while (!new MoveLogic().isColumnValidAndNotFull(robotsColumn))
     robotsColumn
   }
 

@@ -1,8 +1,7 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.command.Invoker
-import de.htwg.se.connectfour.model.{Grid, SingletonGrid}
 import de.htwg.se.connectfour.model.player.GamingPlayers
+import de.htwg.se.connectfour.model.{Grid, SingletonGrid}
 
 class Game(val gamePlayers: GamingPlayers) {
 
@@ -27,7 +26,7 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def undoMoves(): Unit = {
     for (_ <- 1 to output.getUndoMovesCount()) {
-      Invoker.undo()
+      // TODO
     }
   }
 
@@ -39,7 +38,7 @@ class Game(val gamePlayers: GamingPlayers) {
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
     var columnMove = currentPlayer.playTurn()
-    while (MoveLogic.isFullAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
+    while (new MoveLogic().isFullAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
       output.wrongMove(columnMove)
       columnMove = currentPlayer.playTurn()
     }

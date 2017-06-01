@@ -1,95 +1,116 @@
 package de.htwg.se.connectfour.view
 
-import java.awt.event.{ActionEvent, ActionListener}
-import java.awt.{Color, GridLayout}
-import javax.swing.border.LineBorder
-import javax.swing.{JButton, JFrame, JLabel, JMenu, JMenuBar, JMenuItem, JOptionPane, JPanel, SwingConstants}
+import java.awt.Color
 
 import de.htwg.se.connectfour.controller.GridController
 import de.htwg.se.connectfour.logic.CheckWinner
 import de.htwg.se.connectfour.model.CellType
 import de.htwg.se.connectfour.model.player.GamingPlayers
 
+import scala.swing._
+
 class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) {
-  val rows: Int = gridController.columnSize // row = columnSize = 7
+
+  val rows: Int = gridController.columnSize
+  // row = columnSize = 7
   val columns: Int = gridController.rowSize // TODO: resolve mixed row and column
 
   val checkWinner = new CheckWinner(gridController)
 
-  val frame: JFrame = new JFrame()
-  val panel: JPanel = frame.getContentPane.asInstanceOf[JPanel]
-  var slots: Array[Array[JLabel]] = Array.ofDim[JLabel](rows, columns)
-  val buttons: Array[JButton] = new Array[JButton](rows)
+  var slots: Array[Array[Label]] = Array.ofDim[Label](rows, columns)
+  val buttons: Array[Button] = new Array[Button](rows)
+  var panel = new GridPanel(rows, columns + 1)
 
-  val menuBar: JMenuBar = new JMenuBar()
-  val menu: JMenu = new JMenu("menu")
-  val undo: JMenuItem = new JMenuItem("undo")
-  val redo: JMenuItem = new JMenuItem("redo")
-  val newGame: JMenuItem = new JMenuItem("new game")
-  val exit: JMenuItem = new JMenuItem("exit")
-
+  var mainFrame = new MainFrame()
 
   setup()
 
   def setup(): Unit = {
-    panel.removeAll()
-    panel.setLayout(new GridLayout(rows, columns + 1))
+    setupPanel()
+    setupMenuBar()
+    setupMainFrame()
+  }
 
-    setupMenu()
+  def setupMainFrame(): Unit = {
+    val WIDTH = 700
+    val HEIGHT = 500
+
+    mainFrame.title = "Connect four game"
+    mainFrame.preferredSize = new Dimension(WIDTH, HEIGHT)
+    mainFrame.contents = panel
+    mainFrame.visible = true
+    mainFrame.centerOnScreen()
+  }
+
+
+  def setupPanel(): Unit = {
     setupButtons()
     setupSlots()
-    setupFrame()
-
-    updateBoard()
-  }
-
-  def setupMenu(): Unit ={
-    newGame.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent): Unit = {
-        startNewGame()
+    panel = new GridPanel(rows, columns + 1) {
+      for (i <- 0 until rows) {
+        contents += buttons(i)
       }
-    })
-    menu.add(newGame)
-    menu.add(undo)
-    undo.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent): Unit = {
-        gridController.undo()
-        gamingPlayers.changePlayer() // TODO: don't change player when grid is empty
-        updateBoard()
+      for (column <- 0 until columns - 1; row <- 0 until rows) {
+        contents += slots(row)(column)
       }
-    })
-    menu.add(redo)
-    redo.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent): Unit = {
-        gridController.redo()
-        gamingPlayers.changePlayer() // TODO: don't change player when grid is empty
-        updateBoard()
-      }
-    })
-    exit.addActionListener(new ActionListener {
-       def actionPerformed(e: ActionEvent): Unit = {
-         quit()
-       }
-    })
-    menu.add(exit)
-    menuBar.add(menu)
+    }
 
   }
 
+  def setupMenuBar(): Unit = {
+    val menu = new MenuBar {
+      contents += new Menu("menu") {
+        contents += new MenuItem(Action("new game") {
+          startNewGame()
+        })
+        contents += new MenuItem(Action("undo") {
+          gridController.undo()
+          gamingPlayers.changePlayer() // TODO: don't change player when grid is empty
+          updateBoard()
+        })
+        contents += new MenuItem(Action("redo") {
+          gridController.redo()
+          gamingPlayers.changePlayer() // TODO: don't change player when grid is empty
+          updateBoard()
+        })
+        contents += new MenuItem(Action("exit") {
+          quit()
+        })
+      }
+    }
+    mainFrame.menuBar = menu
+  }
 
   def setupButtons(): Unit = {
     for (i <- 0 until rows) {
-      buttons(i) = new JButton(String.valueOf(i + 1))
-      buttons(i).setActionCommand(String.valueOf(i))
-      buttons(i).addActionListener(new ActionListener() {
-        def actionPerformed(e: ActionEvent): Unit = {
-          val chosenColumn: Int = java.lang.Integer.parseInt(e.getActionCommand)
-          evaluateMove(chosenColumn)
+      val chosenColumn: Int = i
+      buttons(i) = Button(String.valueOf(i + 1))(
+        buttonAction(chosenColumn)
+      )
+    }
+  }
 
-          if (!gamingPlayers.currentPlayer.isReal) playBot()
-        }
-      })
-      panel.add(buttons(i))
+  def buttonAction(chosenColumn: Int): Unit = {
+    slots(1)(1).background = Color.blue
+    evaluateMove(chosenColumn)
+    if (!gamingPlayers.currentPlayer.isReal) playBot()
+  }
+
+  def setupSlots(): Unit = {
+
+    for (column <- 0 until columns; row <- 0 until rows) {
+      slots(row)(column) = new Label {
+        opaque = true
+        horizontalAlignment
+        border = Swing.LineBorder(Color.BLACK, 2)
+      }
+    }
+  }
+
+
+  def updateBoard(): Unit = {
+    for (row <- 0 until rows; column <- 0 until columns) {
+      updateCell(row, column)
     }
   }
 
@@ -103,66 +124,38 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
       else if (gridController.isFull) showDraw()
 
       gamingPlayers.changePlayer()
-      frame.setTitle("Connect four - player " + gamingPlayers.currentPlayer.name)
+      mainFrame.title = "Connect four - player " + gamingPlayers.currentPlayer.name
     } else {
-      JOptionPane.showMessageDialog(null, "Please choose another one.", "Column is filled", JOptionPane.INFORMATION_MESSAGE)
-    }
-  }
-
-  def playBot(): Unit = {
-      val robotsColumn = gamingPlayers.currentPlayer.playTurn()
-      evaluateMove(robotsColumn)
-  }
-
-  def setupSlots(): Unit = {
-    slots = Array.ofDim[JLabel](rows, columns)
-
-    for (column <- 0 until columns; row <- 0 until rows) {
-      slots(row)(column) = new JLabel()
-      slots(row)(column).setHorizontalAlignment(SwingConstants.CENTER)
-      slots(row)(column).setBorder(new LineBorder(Color.black))
-      panel.add(slots(row)(column))
-    }
-  }
-
-  def setupFrame(): Unit = {
-    frame.setTitle("Connect four game")
-    frame.setJMenuBar(menuBar)
-    frame.setContentPane(panel)
-    frame.setSize(700, 600)
-    frame.setVisible(true)
-    frame.setLocationRelativeTo(null)
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-  }
-
-  def updateBoard(): Unit = {
-    for (row <- 0 until rows; column <- 0 until columns) {
-      updateCell(row, column)
+      Dialog.showMessage(null, "Please choose another one.", "Column is filled")
     }
   }
 
   def updateCell(row: Int, column: Int): Unit = {
-    slots(row)(column).setOpaque(true)
-
     gridController.cell(row, column).cellType match {
       case CellType.FIRST =>
-        slots(row)(column).setBackground(Color.red)
+        slots(row)(column).background = Color.red
       case CellType.SECOND =>
-        slots(row)(column).setBackground(Color.blue)
+        slots(row)(column).background = Color.blue
       case CellType.EMPTY =>
-        slots(row)(column).setBackground(Color.white)
+        slots(row)(column).background = Color.white
     }
   }
 
+
   def showWon(): Unit = {
     val winner: String = "Player " + gamingPlayers.currentPlayer.name + " has won"
-    val option: Int = JOptionPane.showConfirmDialog(frame, "Play a new game?", winner, JOptionPane.YES_NO_OPTION)
-    startNewOrQuit(option == 0)
+    val option = Dialog.showConfirmation(null, "Play a new game?", optionType = Dialog.Options.YesNo, title = winner)
+    startNewOrQuit(option == Dialog.Result.Ok)
   }
 
   def showDraw(): Unit = {
-    val option: Int = JOptionPane.showConfirmDialog(frame, "Nobody won.\nPlay a new game?", "Draw", JOptionPane.YES_NO_OPTION)
-    startNewOrQuit(option == 0)
+    val option = Dialog.showConfirmation(null, "Nobody won.\nPlay a new game?", optionType = Dialog.Options.YesNo, title = "Draw")
+    startNewOrQuit(option == Dialog.Result.Ok)
+  }
+
+  def playBot(): Unit = {
+    val robotsColumn = gamingPlayers.currentPlayer.playTurn()
+    evaluateMove(robotsColumn)
   }
 
   private def startNewOrQuit(startNew: Boolean) = {
@@ -179,8 +172,9 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
   }
 
   def quit(): Unit = {
-    frame.dispose()
+    mainFrame.dispose()
     sys.exit(0)
   }
+
 
 }

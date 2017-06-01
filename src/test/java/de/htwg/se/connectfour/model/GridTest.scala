@@ -1,5 +1,6 @@
 package de.htwg.se.connectfour.model
 
+import de.htwg.se.connectfour.controller.GridController
 import org.specs2.mutable.Specification
 
 class GridTest extends Specification {
@@ -50,19 +51,5 @@ class GridTest extends Specification {
       grid.isRowValid(grid.MAX_ROW + 1) must be_==(false)
       grid.isRowValid(grid.MAX_ROW) must be_==(true)
     }
-
-    "have valid and invalid cells" in {
-      grid.isCellValid(grid.MAX_COLUMN + 1, grid.MAX_ROW + 1) must be_==(false)
-      grid.isCellValid(0, 0) must be_==(true)
-    }
-
-    "have valid nonempty cells" in {
-      grid.isCellValidAndNotEmpty(oCell.x, oCell.y) must be_==(true)
-      grid.isCellValidAndNotEmpty(xCell.x, xCell.y) must be_==(true)
-      grid.isCellValidAndNotEmpty(1, 1) must be_==(false)
-      grid.isCellValidAndNotEmpty(grid.MAX_COLUMN + 1, 0) must be_==(false)
-      grid.isCellValidAndNotEmpty(0, grid.MAX_ROW + 1) must be_==(false)
-    }
-
   }
 }

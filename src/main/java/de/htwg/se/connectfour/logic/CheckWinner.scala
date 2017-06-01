@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.logic
 
 import de.htwg.se.connectfour.controller.GridController
-import de.htwg.se.connectfour.model.{Cell, Grid}
+import de.htwg.se.connectfour.model.Cell
 
 class CheckWinner(val gridController: GridController) {
 
@@ -10,12 +10,12 @@ class CheckWinner(val gridController: GridController) {
 
   def isMoveWinning(columnMove: Int): Boolean = {
     val rowMove = gridController.findLastRowPosition(columnMove)
-    val grid = gridController.grid
-    checkForWinner(grid.cell(columnMove, rowMove))
+    checkForWinner(columnMove, rowMove)
   }
 
-  def checkForWinner(cell: Cell): Boolean = {
-    val checkRound = new CheckTurnWinner(cell)
+  def checkForWinner(col: Int, row: Int): Boolean = {
+    val cell = gridController.cell(col, row)
+    val checkRound = CheckTurnWinner(cell)
     checkRound.checkLine(CheckType.VERTICAL) || checkRound.checkLine(CheckType.HORIZONTAL) ||
       checkRound.checkLine(CheckType.DIAGONAL_\) || checkRound.checkLine(CheckType.DIAGONAL_/)
   }
@@ -24,9 +24,7 @@ class CheckWinner(val gridController: GridController) {
     val VERTICAL, HORIZONTAL, DIAGONAL_/, DIAGONAL_\ = Value
   }
 
-  private class CheckTurnWinner(val cell: Cell) {
-
-    val grid: Grid = gridController.grid
+  private case class CheckTurnWinner(cell: Cell) {
 
     def checkLine(checkType: CheckType.Value): Boolean = {
       var winCounter = 0
@@ -53,11 +51,11 @@ class CheckWinner(val gridController: GridController) {
     }
 
     def isValidAndSameType(x: Int, y: Int): Boolean = {
-      grid.isCellValid(x, y) && isCellSameType(x, y)
+      gridController.isCellValid(x, y) && isCellSameType(x, y)
     }
 
     private def isCellSameType(x: Int, y: Int): Boolean = {
-      grid.cell(x, y).cellType == cell.cellType
+      gridController.cell(x, y).cellType == cell.cellType
     }
 
     def increaseOrResetCounter(oldValue: Int, shouldIncrease: Boolean): Int = {

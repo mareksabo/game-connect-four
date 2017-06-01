@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.swing
+package de.htwg.se.connectfour.view
 
 import java.awt.event.{ActionEvent, ActionListener}
 import java.awt.{Color, GridLayout}
@@ -14,7 +14,6 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
   val rows: Int = gridController.columnSize // row = columnSize = 7
   val columns: Int = gridController.rowSize // TODO: resolve mixed row and column
 
-//  val grid: Grid = gridController.grid
   val checkWinner = new CheckWinner(gridController)
 
   val frame: JFrame = new JFrame()

@@ -37,14 +37,7 @@ class Grid(val columns: Int, val rows: Int) {
 
   def setupCell(cell: Cell): Unit = cells(cell.x)(cell.y) = cell
 
-  def isCellValidAndNotEmpty(column: Int, row: Int): Boolean =
-    isCellValid(column, row) &&
-      cell(column, row).cellType != CellType.EMPTY
-
   def cell(x: Int, y: Int): Cell = cells(x)(y)
-
-  def isCellValid(column: Int, row: Int): Boolean =
-    isColumnValid(column) && isRowValid(row)
 
   def isColumnValid(column: Int): Boolean =
     0 <= column && column <= MAX_COLUMN

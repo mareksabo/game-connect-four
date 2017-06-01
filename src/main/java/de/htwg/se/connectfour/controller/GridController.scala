@@ -58,11 +58,19 @@ class GridController(var grid: Grid) extends Publisher {
 
   private[this] def findLowestEmptyRow(column: Int): Int = {
     var currentRow = grid.MAX_ROW
-    while (grid.isCellValidAndNotEmpty(column, currentRow)) {
+    while (isCellValidAndNotEmpty(column, currentRow)) {
       currentRow -= 1
     }
     currentRow
   }
+
+  def isCellValidAndNotEmpty(column: Int, row: Int): Boolean =
+    isCellValid(column, row) &&
+      cell(column, row).cellType != CellType.EMPTY
+
+  def isCellValid(column: Int, row: Int): Boolean =
+    grid.isColumnValid(column) && grid.isRowValid(row)
+
 
   def removeSymbolFromColumn(column: Int): Unit = {
     val lastFilledRow = findLastRowPosition(column)

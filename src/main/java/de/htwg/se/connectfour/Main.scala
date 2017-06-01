@@ -4,7 +4,7 @@ import de.htwg.se.connectfour.controller.GridController
 import de.htwg.se.connectfour.logic.Game
 import de.htwg.se.connectfour.model.Grid
 import de.htwg.se.connectfour.model.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
-import de.htwg.se.connectfour.swing.Gui
+import de.htwg.se.connectfour.view.Gui
 
 object Main {
   def main(args: Array[String]): Unit = {

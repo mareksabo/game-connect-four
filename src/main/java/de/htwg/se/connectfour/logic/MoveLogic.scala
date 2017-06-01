@@ -1,12 +1,12 @@
 package de.htwg.se.connectfour.logic
 
 import de.htwg.se.connectfour.model.{Cell, CellType, Grid, SingletonGrid}
-import de.htwg.se.connectfour.pattern.{PlayedColumn, UndoManager}
+import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
 
 class MoveLogic {
 
   val grid: Grid = SingletonGrid.getGrid
-  val undoManager = new UndoManager
+  val undoManager = new RevertManager
 
   def isFullAndAddCell(column: Int, cellType: CellType.Value): Boolean = {
     if (isColumnValidAndNotFull(column)) {

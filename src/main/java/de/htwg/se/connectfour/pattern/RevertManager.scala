@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.pattern
 
-class UndoManager {
+class RevertManager {
 
   private var undoStack: List[Command] = Nil
   private var redoStack: List[Command] = Nil

@@ -6,8 +6,8 @@ import de.htwg.se.connectfour.controller.GridController
 import de.htwg.se.connectfour.model.CellType
 import de.htwg.se.connectfour.model.player.GamingPlayers
 
-import scala.swing._
-import scala.swing.event.Key
+import scala.swing.{Action, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing}
+import scala.swing.event.{Event, Key}
 
 class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) {
 

@@ -5,6 +5,7 @@ import de.htwg.se.connectfour.logic.CheckWinner
 import de.htwg.se.connectfour.model.CellType.CellType
 import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
 import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
+import de.htwg.se.connectfour.view.{GridChanged, PlayerGridChanged}
 
 import scala.swing.Publisher
 
@@ -17,19 +18,19 @@ class GridController(var grid: Grid) extends Publisher {
   def createEmptyGrid(columns: Int, rows: Int): Unit = {
     grid = new Grid(columns, rows)
     gameStatus = StatusType.NEW
-    publish(new CellChanged)
+    publish(new GridChanged)
   }
 
   def undo(): Unit = {
     revertManager.undo()
     gameStatus = StatusType.UNDO
-    publish(new CellChanged)
+    publish(new PlayerGridChanged)
   }
 
   def redo(): Unit = {
     revertManager.redo()
     gameStatus = StatusType.REDO
-    publish(new CellChanged)
+    publish(new PlayerGridChanged)
   }
 
   def cell(col: Int, row: Int): Cell = grid.cell(col, row)
@@ -44,6 +45,7 @@ class GridController(var grid: Grid) extends Publisher {
     if (isColumnValidAndNotFull(column)) {
       revertManager.execute(PlayedColumn(column, findLowestEmptyRow(column), cellType, this))
       gameStatus = StatusType.SET
+      publish(new PlayerGridChanged)
       return false
     }
     gameStatus = StatusType.FULL
@@ -81,7 +83,7 @@ class GridController(var grid: Grid) extends Publisher {
   def set(col: Int, row: Int, value: CellType): Unit = {
     revertManager.execute(PlayedColumn(col, row, value, this))
     gameStatus = StatusType.SET
-    publish(new CellChanged)
+    publish(new PlayerGridChanged)
   }
 
   def isMoveWinning(columnMove: Int): Boolean = {

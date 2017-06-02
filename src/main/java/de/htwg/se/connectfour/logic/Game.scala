@@ -16,7 +16,7 @@ class Game(val gridController: GridController, val gamePlayers: GamingPlayers) {
 
   def playGame(): Unit = {
     var usersMove = processTurn()
-    while (!new CheckWinner(gridController).isMoveWinning(usersMove)) {
+    while (!gridController.isMoveWinning(usersMove)) {
       gamePlayers.changePlayer()
       usersMove = processTurn()
     }

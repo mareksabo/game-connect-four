@@ -8,11 +8,6 @@ class CheckWinner(val gridController: GridController) {
   val NUMBER_OF_CELLS_TO_WIN = 4
   val CELLS_AROUND_TO_WIN: Int = NUMBER_OF_CELLS_TO_WIN - 1
 
-  def isMoveWinning(columnMove: Int): Boolean = {
-    val rowMove = gridController.findLastRowPosition(columnMove)
-    checkForWinner(columnMove, rowMove)
-  }
-
   def checkForWinner(col: Int, row: Int): Boolean = {
     val cell = gridController.cell(col, row)
     val checkRound = CheckTurnWinner(cell)

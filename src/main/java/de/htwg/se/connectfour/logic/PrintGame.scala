@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.model.Grid
-import de.htwg.se.connectfour.model.player.GamingPlayers
+import de.htwg.se.connectfour.mvc.model.Grid
+import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
 
 import scala.io.StdIn
 

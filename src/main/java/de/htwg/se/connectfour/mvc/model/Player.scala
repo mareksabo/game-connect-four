@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.model
+package de.htwg.se.connectfour.mvc.model
 
 import scala.io.StdIn
 

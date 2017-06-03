@@ -1,11 +1,11 @@
-package de.htwg.se.connectfour.controller
+package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.controller.StatusType.GameStatus
+import de.htwg.se.connectfour.mvc.controller.StatusType.GameStatus
 import de.htwg.se.connectfour.logic.CheckWinner
-import de.htwg.se.connectfour.model.CellType.CellType
-import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
+import de.htwg.se.connectfour.mvc.model.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.{Cell, CellType, Grid}
 import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
-import de.htwg.se.connectfour.view.{GridChanged, PlayerGridChanged}
+import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged}
 
 import scala.swing.Publisher
 

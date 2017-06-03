@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.controller.GridController
-import de.htwg.se.connectfour.model.player.GamingPlayers
+import de.htwg.se.connectfour.mvc.controller.GridController
+import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
 
 class Game(val gridController: GridController, val gamePlayers: GamingPlayers) {
 

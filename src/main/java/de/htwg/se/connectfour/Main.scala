@@ -1,10 +1,10 @@
 package de.htwg.se.connectfour
 
-import de.htwg.se.connectfour.controller.GridController
+import de.htwg.se.connectfour.mvc.controller.GridController
 import de.htwg.se.connectfour.logic.Game
-import de.htwg.se.connectfour.model.Grid
-import de.htwg.se.connectfour.model.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
-import de.htwg.se.connectfour.view.Gui
+import de.htwg.se.connectfour.mvc.model.Grid
+import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
+import de.htwg.se.connectfour.mvc.view.Gui
 
 object Main {
   def main(args: Array[String]): Unit = {

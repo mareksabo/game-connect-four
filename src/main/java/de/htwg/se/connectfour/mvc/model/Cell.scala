@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.model
+package de.htwg.se.connectfour.mvc.model
 
 case class Cell(x: Int, y: Int, cellType: CellType.Value) {
 

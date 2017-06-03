@@ -1,7 +1,7 @@
-package de.htwg.se.connectfour.model.player
+package de.htwg.se.connectfour.mvc.model.player
 
-import de.htwg.se.connectfour.model.CellType
-import de.htwg.se.connectfour.model.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.CellType
+import de.htwg.se.connectfour.mvc.model.CellType.CellType
 
 case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) {
 

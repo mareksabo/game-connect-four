@@ -1,6 +1,6 @@
-package de.htwg.se.connectfour.controller
+package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.model.{Cell, CellType, Grid}
+import de.htwg.se.connectfour.mvc.model.{Cell, CellType, Grid}
 import org.specs2.mutable.Specification
 
 class GridControllerTest extends Specification {

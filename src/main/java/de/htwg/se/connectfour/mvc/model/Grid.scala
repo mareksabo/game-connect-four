@@ -1,6 +1,6 @@
-package de.htwg.se.connectfour.model
+package de.htwg.se.connectfour.mvc.model
 
-import de.htwg.se.connectfour.model.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.CellType.CellType
 
 /**
   * Gaming 2D grid with starting coordinates in left upper corner.

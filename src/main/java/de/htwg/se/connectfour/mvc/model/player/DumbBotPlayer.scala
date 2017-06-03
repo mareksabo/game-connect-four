@@ -1,6 +1,6 @@
-package de.htwg.se.connectfour.model.player
+package de.htwg.se.connectfour.mvc.model.player
 
-import de.htwg.se.connectfour.controller.GridController
+import de.htwg.se.connectfour.mvc.controller.GridController
 
 import scala.util.Random
 

@@ -131,8 +131,7 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
   }
 
   def showWon(): Unit = {
-    gamingPlayers.changePlayer() // TODO: solve currentPlayer
-    val winner = "Player " + gamingPlayers.currentPlayer.name + " has won"
+    val winner = "Player " + gamingPlayers.previousPlayer.name + " has won"
     val option = Dialog.showConfirmation(message = "Play a new game?", optionType = Dialog.Options.YesNo, title = winner)
     startNewOrQuit(option == Dialog.Result.Ok)
   }

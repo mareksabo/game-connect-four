@@ -11,6 +11,8 @@ case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) {
 
   def currentPlayer: Player = if (_isFirstGoing) firstPlayer else secondPlayer
 
+  def previousPlayer: Player = if (!_isFirstGoing) firstPlayer else secondPlayer
+
   def changePlayer(): Unit = {
     _isFirstGoing = !_isFirstGoing
   }

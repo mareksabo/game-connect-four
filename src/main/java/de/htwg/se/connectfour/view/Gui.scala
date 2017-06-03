@@ -7,7 +7,7 @@ import de.htwg.se.connectfour.model.CellType
 import de.htwg.se.connectfour.model.player.GamingPlayers
 
 import scala.swing.event.{Event, Key}
-import scala.swing.{Action, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing}
+import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
 
 class PlayerGridChanged extends Event
 
@@ -17,6 +17,7 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
 
   val columns: Int = gridController.columnSize
   val rows: Int = gridController.rowSize
+  val statusLine = new TextField(gridController.statusText, 20)
 
   val blocks: Array[Array[Label]] = {
     val blocks: Array[Array[Label]] = Array.ofDim[Label](columns, rows)
@@ -41,7 +42,11 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
     val mainFrame = new MainFrame()
     mainFrame.title = "Connect four game"
     mainFrame.preferredSize = new Dimension(WIDTH, HEIGHT)
-    mainFrame.contents = createPanel()
+    mainFrame.contents = new BorderPanel {
+      add(createPanel(), BorderPanel.Position.Center)
+      add(statusLine, BorderPanel.Position.South)
+    }
+
     mainFrame.menuBar = createMenuBar()
     mainFrame.centerOnScreen()
     mainFrame.visible = true
@@ -82,9 +87,11 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
     reactions += {
       case _: GridChanged =>
         redraw()
+        statusLine.text = gridController.statusText
       case _: PlayerGridChanged =>
         gamingPlayers.changePlayer()
         redraw()
+        statusLine.text = gridController.statusText
     }
   }
 

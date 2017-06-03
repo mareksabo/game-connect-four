@@ -11,7 +11,7 @@ import scala.swing.Publisher
 
 class GridController(var grid: Grid) extends Publisher {
 
-  var gameStatus: GameStatus = _
+  var gameStatus: GameStatus = StatusType.NEW
   private val revertManager = new RevertManager
   private val checkWinner = new CheckWinner(this)
 
@@ -38,7 +38,9 @@ class GridController(var grid: Grid) extends Publisher {
   def columnSize: Int = grid.columns
 
   def rowSize: Int = grid.rows
+
   def isFull: Boolean = grid.isFull
+
   def statusText: String = StatusType.message(gameStatus)
 
   def isFullAndAddCell(column: Int, cellType: CellType): Boolean = {

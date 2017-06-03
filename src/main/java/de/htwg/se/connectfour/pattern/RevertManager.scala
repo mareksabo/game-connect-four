@@ -7,6 +7,7 @@ class RevertManager {
 
   def execute(command: Command): Unit = {
     undoStack = command :: undoStack
+    redoStack = Nil
     command.execute()
   }
 

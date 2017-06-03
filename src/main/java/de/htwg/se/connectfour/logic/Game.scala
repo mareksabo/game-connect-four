@@ -37,10 +37,11 @@ class Game(val gridController: GridController, val gamePlayers: GamingPlayers) {
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
     var columnMove = currentPlayer.playTurn()
-    while (gridController.isFullAndAddCell(columnMove, gamePlayers.currentPlayerCellType())) {
+    while (gridController.isColumnFull(columnMove)) {
       output.wrongMove(columnMove)
       columnMove = currentPlayer.playTurn()
     }
+    gridController.addCell(columnMove, gamePlayers.currentPlayerCellType())
     columnMove
   }
 

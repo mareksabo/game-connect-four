@@ -5,7 +5,7 @@ import de.htwg.se.connectfour.logic.CheckWinner
 import de.htwg.se.connectfour.mvc.model.CellType.CellType
 import de.htwg.se.connectfour.mvc.model.{Cell, CellType, Grid}
 import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
-import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged}
+import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged, StatusBarChanged}
 
 import scala.swing.Publisher
 
@@ -39,27 +39,30 @@ class GridController(var grid: Grid) extends Publisher {
 
   def rowSize: Int = grid.rows
 
-  def isFull: Boolean = grid.isFull
+  def isFull: Boolean = {
+    val isFull = grid.isFull
+    if (isFull) gameStatus = StatusType.DRAW
+    isFull
+  }
 
   def statusText: String = StatusType.message(gameStatus)
 
-  def isFullAndAddCell(column: Int, cellType: CellType): Boolean = {
-    if (isColumnValidAndNotFull(column)) {
+  def addCell(column: Int, cellType: CellType): Unit = {
       revertManager.execute(PlayedColumn(column, findLowestEmptyRow(column), cellType, this))
       gameStatus = StatusType.SET
       publish(new PlayerGridChanged)
-      return false
-    }
-    gameStatus = StatusType.FULL
-    true
+
   }
 
   def isColumnValidAndNotFull(column: Int): Boolean = {
     grid.isColumnValid(column) && !isColumnFull(column)
   }
 
-  private[this] def isColumnFull(column: Int): Boolean =
+  def isColumnFull(column: Int): Boolean = {
+    gameStatus = StatusType.FULL
+    publish(new StatusBarChanged)
     findLowestEmptyRow(column) < 0
+  }
 
   private[this] def findLowestEmptyRow(column: Int): Int = {
     var currentRow = grid.MAX_ROW
@@ -90,7 +93,12 @@ class GridController(var grid: Grid) extends Publisher {
 
   def isMoveWinning(columnMove: Int): Boolean = {
     val rowMove = findLastRowPosition(columnMove)
-    checkWinner.checkForWinner(columnMove, rowMove)
+    val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
+    if (hasWon) {
+      gameStatus = StatusType.FINISHED
+      publish(new StatusBarChanged)
+    }
+    hasWon
   }
 
   def findLastRowPosition(column: Int): Int = {

@@ -6,12 +6,8 @@ import de.htwg.se.connectfour.mvc.controller.GridController
 import de.htwg.se.connectfour.mvc.model.CellType
 import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
 
-import scala.swing.event.{Event, Key}
+import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
-
-class PlayerGridChanged extends Event
-
-class GridChanged extends Event
 
 class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) extends Frame {
 
@@ -85,12 +81,14 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
 
   def setupReactions: reactions.type = {
     reactions += {
-      case _: GridChanged =>
-        redraw()
-        statusLine.text = gridController.statusText
       case _: PlayerGridChanged =>
         gamingPlayers.changePlayer()
         redraw()
+        statusLine.text = gridController.statusText
+      case _: GridChanged =>
+        redraw()
+        statusLine.text = gridController.statusText
+      case _: StatusBarChanged =>
         statusLine.text = gridController.statusText
     }
   }
@@ -107,13 +105,14 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
 
   def evaluateMove(chosenColumn: Int): Unit = {
 
-    val columnFull: Boolean = gridController.isFullAndAddCell(chosenColumn, gamingPlayers.currentPlayerCellType())
+    val columnFull: Boolean = gridController.isColumnFull(chosenColumn)
 
     if (columnFull) {
       Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
       return
     }
 
+    gridController.addCell(chosenColumn, gamingPlayers.currentPlayerCellType())
     if (gridController.isMoveWinning(chosenColumn)) showWon()
     else if (gridController.isFull) showDraw()
   }
@@ -135,13 +134,15 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
     gamingPlayers.changePlayer() // TODO: solve currentPlayer
     val winner = "Player " + gamingPlayers.currentPlayer.name + " has won"
     val option = Dialog.showConfirmation(message = "Play a new game?", optionType = Dialog.Options.YesNo, title = winner)
-    if (option == Dialog.Result.Ok) startNewGame()
+    startNewOrQuit(option == Dialog.Result.Ok)
   }
 
   def showDraw(): Unit = {
     val option = Dialog.showConfirmation(message = "Nobody won.\nPlay a new game?", optionType = Dialog.Options.YesNo, title = "Draw")
-    if (option == Dialog.Result.Ok) startNewGame()
+    startNewOrQuit(option == Dialog.Result.Ok)
   }
+
+  def startNewOrQuit(startNew: Boolean) : Unit = if(startNew) startNewGame() else quit()
 
   def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columnSize, gridController.rowSize)
 

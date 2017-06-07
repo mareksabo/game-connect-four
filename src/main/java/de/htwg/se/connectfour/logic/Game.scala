@@ -1,13 +1,11 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.command.Invoker
-import de.htwg.se.connectfour.model.{Grid, SingletonGrid}
-import de.htwg.se.connectfour.player.GamingPlayers
+import de.htwg.se.connectfour.mvc.controller.GridController
+import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
 
-class Game(val gamePlayers: GamingPlayers) {
+class Game(val gridController: GridController, val gamePlayers: GamingPlayers) {
 
-  val grid: Grid = SingletonGrid.getGrid
-  val output = new PrintGame(gamePlayers)
+  val output = new PrintGame(gamePlayers, gridController.grid)
 
   def startGame(): Unit = {
     output.welcomePlayers()
@@ -18,7 +16,7 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def playGame(): Unit = {
     var usersMove = processTurn()
-    while (!CheckWinner.isMoveWinning(usersMove)) {
+    while (!gridController.isMoveWinning(usersMove)) {
       gamePlayers.changePlayer()
       usersMove = processTurn()
     }
@@ -27,7 +25,7 @@ class Game(val gamePlayers: GamingPlayers) {
 
   def undoMoves(): Unit = {
     for (_ <- 1 to output.getUndoMovesCount()) {
-      Invoker.undo()
+      gridController.undo()
     }
   }
 
@@ -39,12 +37,12 @@ class Game(val gamePlayers: GamingPlayers) {
   def loadValidMove(): Int = {
     val currentPlayer = gamePlayers.currentPlayer
     var columnMove = currentPlayer.playTurn()
-    while (MoveLogic.isFullAndAddCell(columnMove,  gamePlayers.currentPlayerCellType())) {
+    while (gridController.isColumnFull(columnMove)) {
       output.wrongMove(columnMove)
       columnMove = currentPlayer.playTurn()
     }
+    gridController.addCell(columnMove, gamePlayers.currentPlayerCellType())
     columnMove
   }
-
 
 }

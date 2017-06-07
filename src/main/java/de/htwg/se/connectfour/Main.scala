@@ -1,28 +1,30 @@
 package de.htwg.se.connectfour
 
+import de.htwg.se.connectfour.mvc.controller.GridController
 import de.htwg.se.connectfour.logic.Game
-import de.htwg.se.connectfour.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
-import de.htwg.se.connectfour.swing.Gui
-
-import scala.io.StdIn
+import de.htwg.se.connectfour.mvc.model.Grid
+import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
+import de.htwg.se.connectfour.mvc.view.Gui
 
 object Main {
   def main(args: Array[String]): Unit = {
 
-    val player1 = new RealPlayer("Marek")
-    val player2 = new DumbBotPlayer()
-    val players = new GamingPlayers(player1, player2)
+    val grid = new Grid
+    val gridController = new GridController(grid)
+    val player1 = RealPlayer("Marek")
+    val player2 = DumbBotPlayer(gridController)
+    val players = GamingPlayers(player1, player2)
 
-    startGame(players)
+    startGame(gridController, players)
   }
 
-  def startGame(players: GamingPlayers): Unit = {
+  def startGame(gridController: GridController, players: GamingPlayers): Unit = {
     Console.print("Do you want to start gui (y/n): ")
-    val input = StdIn.readLine()
+    val input = "y" //StdIn.readLine()
     if (input.equalsIgnoreCase("y")) {
-      Gui.init(players)
+      new Gui(gridController, players)
     } else {
-      new Game(players).startGame()
+      new Game(gridController, players).startGame()
     }
   }
 

@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.model
+package de.htwg.se.connectfour.mvc.model
 
 import org.specs2.mutable.Specification
 
@@ -8,12 +8,13 @@ class CellTest extends Specification {
     val cell = new Cell(1, 2)
 
     "be empty if not set" in {
-      cell.cellType must be_==(CellType.Empty)
+      cell.cellType must be_==(CellType.EMPTY)
     }
 
     "the empty symbol must be a space" in {
-      cell.symbol must be_==(' ')
+      cell.toString must be_==(" ")
     }
+
 
   }
 }

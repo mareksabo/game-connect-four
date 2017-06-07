@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.player
+package de.htwg.se.connectfour.mvc.model.player
 
 trait Player {
   val name: String

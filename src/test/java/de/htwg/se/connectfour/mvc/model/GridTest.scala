@@ -51,5 +51,13 @@ class GridTest extends Specification {
       grid.isRowValid(grid.MAX_ROW + 1) must be_==(false)
       grid.isRowValid(grid.MAX_ROW) must be_==(true)
     }
+
+    "grid is full" in {
+      val localGrid = new Grid
+      for (row <- 0 until localGrid.rows; column <- 0 until localGrid.columns) {
+        localGrid.set(column, row, CellType.SECOND)
+      }
+      localGrid.isFull must be_==(true)
+    }
   }
 }

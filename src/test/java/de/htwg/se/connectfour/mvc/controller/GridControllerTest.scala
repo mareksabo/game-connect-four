@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.model.{Cell, CellType, Grid}
+import de.htwg.se.connectfour.mvc.model.{ Cell, CellType, Grid }
 import org.specs2.mutable.Specification
 
 class GridControllerTest extends Specification {
@@ -36,23 +36,23 @@ class GridControllerTest extends Specification {
       localGridController.gameStatus must be_==(StatusType.NEW)
     }
 
-    "have undone move" in{
+    "have undone move" in {
       val localGridController = new GridController(grid)
       localGridController.undo()
       localGridController.gameStatus must be_==(StatusType.UNDO)
     }
 
-    "have redone move" in{
+    "have redone move" in {
       val localGridController = new GridController(grid)
       localGridController.redo()
       localGridController.gameStatus must be_==(StatusType.REDO)
     }
 
-    "return rowSize 2" in{
+    "return rowSize 2" in {
       gridController.rowSize must be_==(2)
     }
 
-    "return columnSize 3" in{
+    "return columnSize 3" in {
       gridController.columnSize must be_==(3)
     }
 
@@ -81,21 +81,49 @@ class GridControllerTest extends Specification {
 
     "have removed symbol from column" in {
       val localGridController = new GridController(grid)
-      localGridController.set(0,0, CellType.FIRST)
+      localGridController.set(0, 0, CellType.FIRST)
       localGridController.removeSymbolFromColumn(0)
-      localGridController.grid.cell(0,0).cellType must be_==(CellType.EMPTY)
+      localGridController.grid.cell(0, 0).cellType must be_==(CellType.EMPTY)
     }
 
-    "have won with this move" in {
-      val localGrid = new Grid(7,6)
+    "have won with this move (horizontal)" in {
+      val localGrid = new Grid(7, 6)
       val localGridController = new GridController(localGrid)
-      for (row <- 0 until 4){
-        localGridController.set(row,5, CellType.FIRST)
+      for (row <- 0 until 4) {
+        localGridController.set(row, 5, CellType.FIRST)
       }
-      //print(localGridController.grid.toString)
-
       localGridController.isMoveWinning(3) must be_==(true)
+    }
 
+    "have also won with this move (vertical)" in {
+      val localGrid = new Grid(7, 6)
+      val localGridController = new GridController(localGrid)
+      for (column <- 2 until 6) {
+        localGridController.set(0, column, CellType.FIRST)
+      }
+      localGridController.isMoveWinning(0) must be_==(true)
+    }
+
+    "have also won with this move (diagonal)" in {
+      val localGrid = new Grid(7, 6)
+      val localGridController = new GridController(localGrid)
+      var counter = 0
+      for (column <- 2 until 6) {
+        localGridController.set(counter, column, CellType.FIRST)
+        counter+=1
+      }
+      localGridController.isMoveWinning(3) must be_==(true)
+    }
+
+    "have also won with this move (diagonal)" in {
+      val localGrid = new Grid(7, 6)
+      val localGridController = new GridController(localGrid)
+      var counter = 3
+      for (column <- 2 until 6) {
+        localGridController.set(counter, column, CellType.FIRST)
+        counter-=1
+      }
+      localGridController.isMoveWinning(0) must be_==(true)
     }
 
   }

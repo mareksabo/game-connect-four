@@ -1,6 +1,6 @@
-package de.htwg.se.connectfour.mvc.model
+package de.htwg.se.connectfour.mvc.player
 
-import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, PrintStream }
+import java.io.ByteArrayInputStream
 
 import de.htwg.se.connectfour.mvc.model.player.RealPlayer
 import org.specs2.mutable.Specification

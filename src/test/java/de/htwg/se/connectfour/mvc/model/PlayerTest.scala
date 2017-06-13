@@ -1,8 +1,7 @@
-package exludedTests
+package de.htwg.se.connectfour.mvc.model
 
 import java.io.ByteArrayInputStream
 
-import de.htwg.se.connectfour.mvc.model.{CellType, Player}
 import org.specs2.mutable.Specification
 
 class PlayerTest extends Specification {

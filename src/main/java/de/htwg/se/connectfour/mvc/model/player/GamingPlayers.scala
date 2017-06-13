@@ -3,7 +3,7 @@ package de.htwg.se.connectfour.mvc.model.player
 import de.htwg.se.connectfour.mvc.model.CellType
 import de.htwg.se.connectfour.mvc.model.CellType.CellType
 
-case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) {
+case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) { // add grid controller
 
   private var _isFirstGoing = true
 

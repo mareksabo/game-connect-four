@@ -2,21 +2,20 @@ package de.htwg.se.connectfour.mvc.controller
 
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
-import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged, StatusBarChanged}
+import de.htwg.se.connectfour.mvc.view.{Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 import de.htwg.se.connectfour.types.CellType.CellType
-import de.htwg.se.connectfour.types.EffectType.EffectType
 import de.htwg.se.connectfour.types.StatusType.GameStatus
-import de.htwg.se.connectfour.types.{CellType, EffectType, StatusType}
+import de.htwg.se.connectfour.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
 case class GridController(columns: Int, rows: Int) extends Publisher {
 
-  var grid : Grid = _
+  var grid: Grid = _
   private var gameStatus: GameStatus = StatusType.NEW
   private val revertManager = new RevertManager
-  private var checkWinner : CheckWinner = _
-  private var validator : Validator = _
+  private var checkWinner: CheckWinner = _
+  private var validator: Validator = _
   private var _gameFinished = false
 
   createEmptyGrid(columns, rows)
@@ -33,31 +32,61 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   }
 
   def undo(): Unit = {
-    revertManager.undo()
-    gameStatus = StatusType.UNDO
-    publish(new PlayerGridChanged)
+    val didUndo = revertManager.undo()
+    if (didUndo) {
+      gameStatus = StatusType.UNDO
+      publish(new PlayerGridChanged)
+    } else {
+      gameStatus = StatusType.INVALID
+      publish(new InvalidMove)
+    }
   }
 
   def redo(): Unit = {
-    revertManager.redo()
-    gameStatus = StatusType.REDO
-    publish(new PlayerGridChanged)
+    val didRedo = revertManager.redo()
+    if (didRedo) {
+      gameStatus = StatusType.REDO
+      publish(new PlayerGridChanged)
+    } else {
+      gameStatus = StatusType.INVALID
+      publish(new InvalidMove)
+    }
   }
 
   def cell(col: Int, row: Int): Cell = grid.cell(col, row)
 
   def statusText: String = StatusType.message(gameStatus)
 
-  def addCell(column: Int, cellType: CellType): Unit = {
-      revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
-      gameStatus = StatusType.SET
-      publish(new PlayerGridChanged)
+  def checkAddCell(column: Int, cellType: CellType): Unit = {
+    if (isInvalid(column)) return
+    addCell(column, cellType)
+    checkFinish(column)
+  }
+
+  private def isInvalid(column: Int) = gameFinished || isColumnFull(column) || !isColumnValid(column)
+
+  private def addCell(column: Int, cellType: CellType): Unit = {
+    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
+    gameStatus = StatusType.SET
+    publish(new PlayerGridChanged)
+  }
+
+  private def isColumnValid(column: Int): Boolean = {
+    val valid = grid.isColumnValid(column)
+    if (!valid) {
+      gameStatus = StatusType.INVALID
+      publish(new InvalidMove)
+    }
+    valid
   }
 
   def isColumnFull(column: Int): Boolean = {
-    gameStatus = StatusType.FULL
-    publish(new StatusBarChanged)
-    validator.isColumnFull(column)
+    val isFull = validator.isColumnFull(column)
+    if (isFull) {
+      gameStatus = StatusType.FULL
+      publish(new FilledColumn)
+    }
+    isFull
   }
 
   def removeSymbolFromColumn(column: Int): Unit = {
@@ -65,19 +94,17 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     grid.setupCell(Cell(column, lastFilledRow, CellType.EMPTY))
   }
 
-  def isMoveWinning(columnMove: Int): EffectType = {
+  private def checkFinish(columnMove: Int): Unit = {
     val rowMove = validator.lastRowPosition(columnMove)
     val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
     if (hasWon) {
       gameStatus = StatusType.FINISHED
-      publish(new StatusBarChanged)
+      publish(new PlayerWon)
       _gameFinished = true
-      return EffectType.WON
     } else if (grid.isFull) {
       gameStatus = StatusType.DRAW
-      return EffectType.DRAW
+      publish(new Draw)
     }
-    EffectType.NOTHING
   }
 
   def gameFinished: Boolean = _gameFinished

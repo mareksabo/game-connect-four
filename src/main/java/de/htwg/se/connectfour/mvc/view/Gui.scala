@@ -3,7 +3,7 @@ package de.htwg.se.connectfour.mvc.view
 import java.awt.Color
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.types.{CellType, EffectType}
+import de.htwg.se.connectfour.types.CellType
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
@@ -80,38 +80,32 @@ case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) ext
 
   def setupReactions: reactions.type = {
     reactions += {
-      case _: PlayerGridChanged =>
-        redraw()
-        statusLine.text = gridController.statusText
-      case _: GridChanged =>
-        redraw()
-        statusLine.text = gridController.statusText
-      case _: StatusBarChanged =>
-        statusLine.text = gridController.statusText
+      case _: PlayerGridChanged => redraw()
+      case _: GridChanged => redraw()
+      case _: PlayerWon => showWon()
+      case _: Draw => showDraw()
+      case _: FilledColumn => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
+      case _: InvalidMove => redraw()
     }
   }
 
   def buttonAction(chosenColumn: Int): Unit = {
-    evaluateMove(chosenColumn)
-    if (!gamingPlayers.currentPlayer.isReal) playBot()
+    gamingPlayers.applyTurn(chosenColumn)
+    playBotIfGoing()
   }
 
-  def playBot(): Unit = {
-    val robotsColumn = gamingPlayers.currentPlayer.playTurn()
-    evaluateMove(robotsColumn)
-  }
-
-  def evaluateMove(chosenColumn: Int): Unit = {
-    val winType = gamingPlayers.applyTurn(chosenColumn)
-    winType match {
-      case EffectType.WON => showWon()
-      case EffectType.DRAW => showDraw()
-      case EffectType.COLUMN_FULL => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
-      case EffectType.NOTHING =>
+  def playBotIfGoing(): Unit = {
+    if (!gamingPlayers.currentPlayer.isReal) {
+      val robotsColumn = gamingPlayers.currentPlayer.playTurn()
+      gamingPlayers.applyTurn(robotsColumn)
     }
   }
 
-  def redraw(): Unit = for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)
+
+  def redraw(): Unit = {
+    for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)
+    statusLine.text = gridController.statusText
+  }
 
   def redrawCell(column: Int, row: Int): Unit = {
     gridController.cell(column, row).cellType match {
@@ -135,7 +129,7 @@ case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) ext
     startNewOrQuit(option == Dialog.Result.Ok)
   }
 
-  def startNewOrQuit(startNew: Boolean) : Unit = if(startNew) startNewGame() else quit()
+  def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()
 
   def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columns, gridController.rows)
 

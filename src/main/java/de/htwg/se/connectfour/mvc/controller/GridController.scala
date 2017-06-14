@@ -10,13 +10,17 @@ import de.htwg.se.connectfour.types.{CellType, EffectType, StatusType}
 
 import scala.swing.Publisher
 
-case class GridController() extends Publisher {
+case class GridController(columns: Int, rows: Int) extends Publisher {
 
-  var grid = new Grid()
-  var gameStatus: GameStatus = StatusType.NEW
+  var grid : Grid = _
+  private var gameStatus: GameStatus = StatusType.NEW
   private val revertManager = new RevertManager
   private var checkWinner : CheckWinner = _
   private var validator : Validator = _
+
+  createEmptyGrid(columns, rows)
+
+  def this() = this(7, 6)
 
   def createEmptyGrid(columns: Int, rows: Int): Unit = {
     grid = new Grid(columns, rows)
@@ -40,14 +44,10 @@ case class GridController() extends Publisher {
 
   def cell(col: Int, row: Int): Cell = grid.cell(col, row)
 
-  def columnSize: Int = grid.columns
-
-  def rowSize: Int = grid.rows
-
   def statusText: String = StatusType.message(gameStatus)
 
   def addCell(column: Int, cellType: CellType): Unit = {
-      revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, this))
+      revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
       gameStatus = StatusType.SET
       publish(new PlayerGridChanged)
   }

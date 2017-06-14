@@ -23,8 +23,6 @@ class Grid(val columns: Int, val rows: Int) {
   val MAX_COLUMN: Int = columns - 1
   val MAX_ROW: Int = rows - 1
 
-  def this() = this(7, 6)
-
   private val cells: Array[Array[Cell]] = Array.ofDim[Cell](columns, rows)
   emptyGrid()
 

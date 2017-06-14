@@ -10,8 +10,8 @@ import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridP
 
 class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) extends Frame {
 
-  val columns: Int = gridController.columnSize
-  val rows: Int = gridController.rowSize
+  val columns: Int = gridController.columns
+  val rows: Int = gridController.rows
   val statusLine = new TextField(gridController.statusText, 20)
 
   val blocks: Array[Array[Label]] = {
@@ -137,7 +137,7 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
 
   def startNewOrQuit(startNew: Boolean) : Unit = if(startNew) startNewGame() else quit()
 
-  def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columnSize, gridController.rowSize)
+  def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columns, gridController.rows)
 
   def quit(): Unit = sys.exit(0)
 

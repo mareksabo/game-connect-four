@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.view
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.types.{EffectType, StatusType}
+import de.htwg.se.connectfour.types.EffectType
 
 import scala.io.StdIn
 import scala.swing.Reactor
@@ -54,18 +54,16 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
   }
 
   def showMessage(): Unit = {
-    println(StatusType.message(gridController.gameStatus))
+    println(gridController.statusText)
     println("Current player: " + gamingPlayers.currentPlayer + " (" + gamingPlayers.currentPlayerCellType + ")")
   }
 
   def showWon(): Unit = {
-    showGrid()
     println("Congratulations!")
     println("Player " + gamingPlayers.previousPlayer.name + " has won.")
   }
 
   def showDraw(): Unit = {
-    showGrid()
     println("Draw, nobody won.")
   }
 

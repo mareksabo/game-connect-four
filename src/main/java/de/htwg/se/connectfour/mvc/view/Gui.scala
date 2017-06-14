@@ -3,7 +3,7 @@ package de.htwg.se.connectfour.mvc.view
 import java.awt.Color
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.CellType
+import de.htwg.se.connectfour.mvc.model.{CellType, EffectType}
 import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
 
 import scala.swing.event.Key
@@ -82,7 +82,6 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
   def setupReactions: reactions.type = {
     reactions += {
       case _: PlayerGridChanged =>
-        gamingPlayers.changePlayer()
         redraw()
         statusLine.text = gridController.statusText
       case _: GridChanged =>
@@ -104,17 +103,13 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
   }
 
   def evaluateMove(chosenColumn: Int): Unit = {
-
-    val columnFull: Boolean = gridController.isColumnFull(chosenColumn)
-
-    if (columnFull) {
-      Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
-      return
+    val winType = gamingPlayers.applyTurn(chosenColumn)
+    winType match {
+      case EffectType.WON => showWon()
+      case EffectType.DRAW => showDraw()
+      case EffectType.COLUMN_FULL => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
+      case EffectType.NOTHING =>
     }
-
-    gridController.addCell(chosenColumn, gamingPlayers.currentPlayerCellType())
-    if (gridController.isMoveWinning(chosenColumn)) showWon()
-    else if (gridController.isFull) showDraw()
   }
 
   def redraw(): Unit = for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)

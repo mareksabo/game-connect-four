@@ -1,11 +1,12 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.controller.StatusType.GameStatus
 import de.htwg.se.connectfour.logic.CheckWinner
+import de.htwg.se.connectfour.mvc.controller.StatusType.GameStatus
 import de.htwg.se.connectfour.mvc.model.CellType.CellType
-import de.htwg.se.connectfour.mvc.model.{Cell, CellType, Grid}
-import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
+import de.htwg.se.connectfour.mvc.model.EffectType.EffectType
+import de.htwg.se.connectfour.mvc.model.{Cell, CellType, EffectType, Grid}
 import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged, StatusBarChanged}
+import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
 
 import scala.swing.Publisher
 
@@ -91,14 +92,16 @@ class GridController(var grid: Grid) extends Publisher {
     publish(new PlayerGridChanged)
   }
 
-  def isMoveWinning(columnMove: Int): Boolean = {
+  def isMoveWinning(columnMove: Int): EffectType = {
     val rowMove = findLastRowPosition(columnMove)
     val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
     if (hasWon) {
       gameStatus = StatusType.FINISHED
       publish(new StatusBarChanged)
+      return EffectType.WON
     }
-    hasWon
+    if (isFull) return EffectType.DRAW
+    EffectType.NOTHING
   }
 
   def findLastRowPosition(column: Int): Int = {

@@ -1,9 +1,19 @@
 package de.htwg.se.connectfour.mvc.model.player
 
-import de.htwg.se.connectfour.mvc.model.CellType
+import de.htwg.se.connectfour.mvc.controller.GridController
+import de.htwg.se.connectfour.mvc.model.{CellType, EffectType}
 import de.htwg.se.connectfour.mvc.model.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.EffectType.EffectType
+import de.htwg.se.connectfour.mvc.view.PlayerGridChanged
 
-case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) { // add grid controller
+import scala.swing.Reactor
+
+case class GamingPlayers(firstPlayer: Player, secondPlayer: Player, gridController: GridController) extends Reactor {
+
+  listenTo(gridController)
+  reactions += {
+    case _: PlayerGridChanged => changePlayer()
+  }
 
   private var _isFirstGoing = true
 
@@ -13,11 +23,17 @@ case class GamingPlayers(firstPlayer: Player, secondPlayer: Player) { // add gri
 
   def previousPlayer: Player = if (!_isFirstGoing) firstPlayer else secondPlayer
 
-  def changePlayer(): Unit = {
+  private def changePlayer(): Unit = {
     _isFirstGoing = !_isFirstGoing
   }
 
-  def currentPlayerCellType(): CellType.Value = cellType(currentPlayer)
+  def applyTurn(column: Int): EffectType = {
+    if (gridController.isColumnFull(column)) return EffectType.COLUMN_FULL
+    gridController.addCell(column, currentPlayerCellType)
+    gridController.isMoveWinning(column)
+  }
+
+  def currentPlayerCellType: CellType = cellType(currentPlayer)
 
   private[this] def cellType(player: Player): CellType = {
     if (player == firstPlayer) CellType.FIRST else CellType.SECOND

@@ -12,7 +12,7 @@ object Main {
     val gridController = new GridController(grid)
     val player1 = RealPlayer("Marek")
     val player2 = DumbBotPlayer(gridController)
-    val players = GamingPlayers(player1, player2)
+    val players = GamingPlayers(player1, player2, gridController)
 
     startGame(gridController, players)
   }

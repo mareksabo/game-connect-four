@@ -9,8 +9,7 @@ import org.specs2.mutable.Specification
 class DumbBotPlayerTest extends Specification{
 
   "Dumb bot player" should{
-    val grid = new Grid(2,3)
-    val gridController = new GridController(grid)
+    val gridController = GridController(2,3)
     val dumbBotPlayer = DumbBotPlayer(gridController)
     "be displayed as non-real player" in{
       dumbBotPlayer.isReal must be_==(false)

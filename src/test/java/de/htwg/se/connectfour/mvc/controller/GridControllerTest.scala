@@ -1,10 +1,10 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.model.{ Cell, CellType, Grid }
+import de.htwg.se.connectfour.mvc.model.{Cell, CellType, Grid}
 import org.specs2.mutable.Specification
 
-class GridControllerTest extends Specification {
 
+class GridControllerTest extends Specification {
   "New GridController of grid 3x2" should {
 
     val grid = new Grid(3, 2)
@@ -22,11 +22,12 @@ class GridControllerTest extends Specification {
     }
 
     "have valid nonempty cells" in {
-      gridController.isCellValidAndNotEmpty(oCell.x, oCell.y) must be_==(true)
-      gridController.isCellValidAndNotEmpty(xCell.x, xCell.y) must be_==(true)
-      gridController.isCellValidAndNotEmpty(1, 1) must be_==(false)
-      gridController.isCellValidAndNotEmpty(grid.MAX_COLUMN + 1, 0) must be_==(false)
-      gridController.isCellValidAndNotEmpty(0, grid.MAX_ROW + 1) must be_==(false)
+      val localGridController = new GridController(grid)
+      localGridController.isCellValidAndNotEmpty(oCell.x, oCell.y) must be_==(true)
+      localGridController.isCellValidAndNotEmpty(xCell.x, xCell.y) must be_==(true)
+      localGridController.isCellValidAndNotEmpty(1, 1) must be_==(false)
+      localGridController.isCellValidAndNotEmpty(grid.MAX_COLUMN + 1, 0) must be_==(false)
+      localGridController.isCellValidAndNotEmpty(0, grid.MAX_ROW + 1) must be_==(false)
     }
 
     "have empty grid" in {
@@ -37,13 +38,15 @@ class GridControllerTest extends Specification {
     }
 
     "have undone move" in {
-      val localGridController = new GridController(grid)
+      val localGrid = new Grid
+      val localGridController = new GridController(localGrid)
       localGridController.undo()
       localGridController.gameStatus must be_==(StatusType.UNDO)
     }
 
     "have redone move" in {
-      val localGridController = new GridController(grid)
+      val localGrid = new Grid
+      val localGridController = new GridController(localGrid)
       localGridController.redo()
       localGridController.gameStatus must be_==(StatusType.REDO)
     }
@@ -66,11 +69,14 @@ class GridControllerTest extends Specification {
     }
 
     "have statusText" in {
-      gridController.statusText must be_==("A new game was created")
+      val localGrid = new Grid
+      val localGridController = new GridController(localGrid)
+      localGridController.statusText must be_==("A new game was created")
     }
 
     "have added cell" in {
-      val localGridController = new GridController(grid)
+      val localGrid = new Grid
+      val localGridController = new GridController(localGrid)
       localGridController.addCell(0, CellType.FIRST)
       localGridController.gameStatus must be_==(StatusType.SET)
     }

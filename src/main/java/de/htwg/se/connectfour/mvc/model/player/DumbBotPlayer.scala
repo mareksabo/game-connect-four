@@ -1,5 +1,6 @@
 package de.htwg.se.connectfour.mvc.model.player
 
+import de.htwg.se.connectfour.logic.Validator
 import de.htwg.se.connectfour.mvc.controller.GridController
 
 import scala.util.Random
@@ -7,13 +8,15 @@ import scala.util.Random
 case class DumbBotPlayer(gridController: GridController) extends Player {
   override val name: String = "Dumb bot"
   val r = Random
+  val grid = gridController.grid
+  val validator = Validator(grid)
 
   override def playTurn(): Int = {
     var robotsColumn: Int = -1
-    if (gridController.isFull) return -1
+    if (grid.isFull) return -1
     do {
-    robotsColumn = r.nextInt(gridController.columnSize)
-    } while (!gridController.isColumnValidAndNotFull(robotsColumn))
+    robotsColumn = r.nextInt(grid.columns)
+    } while (!validator.isColumnValidAndNotFull(robotsColumn))
     robotsColumn
   }
 

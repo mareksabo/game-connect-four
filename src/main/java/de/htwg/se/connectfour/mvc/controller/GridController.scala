@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager}
+import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged, StatusBarChanged}
 import de.htwg.se.connectfour.types.CellType.CellType
@@ -10,14 +10,18 @@ import de.htwg.se.connectfour.types.{CellType, EffectType, StatusType}
 
 import scala.swing.Publisher
 
-class GridController(var grid: Grid) extends Publisher {
+case class GridController() extends Publisher {
 
+  var grid = new Grid()
   var gameStatus: GameStatus = StatusType.NEW
   private val revertManager = new RevertManager
-  private val checkWinner = new CheckWinner(this)
+  private var checkWinner : CheckWinner = _
+  private var validator : Validator = _
 
   def createEmptyGrid(columns: Int, rows: Int): Unit = {
     grid = new Grid(columns, rows)
+    checkWinner = CheckWinner(grid)
+    validator = Validator(grid)
     gameStatus = StatusType.NEW
     publish(new GridChanged)
   }
@@ -40,71 +44,35 @@ class GridController(var grid: Grid) extends Publisher {
 
   def rowSize: Int = grid.rows
 
-  def isFull: Boolean = {
-    val isFull = grid.isFull
-    if (isFull) gameStatus = StatusType.DRAW
-    isFull
-  }
-
   def statusText: String = StatusType.message(gameStatus)
 
   def addCell(column: Int, cellType: CellType): Unit = {
-      revertManager.execute(PlayedCommand(column, findLowestEmptyRow(column), cellType, this))
+      revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, this))
       gameStatus = StatusType.SET
       publish(new PlayerGridChanged)
-
-  }
-
-  def isColumnValidAndNotFull(column: Int): Boolean = {
-    grid.isColumnValid(column) && !isColumnFull(column)
   }
 
   def isColumnFull(column: Int): Boolean = {
     gameStatus = StatusType.FULL
     publish(new StatusBarChanged)
-    findLowestEmptyRow(column) < 0
+    validator.isColumnFull(column)
   }
-
-  private[this] def findLowestEmptyRow(column: Int): Int = {
-    var currentRow = grid.MAX_ROW
-    while (isCellValidAndNotEmpty(column, currentRow)) {
-      currentRow -= 1
-    }
-    currentRow
-  }
-
-  def isCellValidAndNotEmpty(column: Int, row: Int): Boolean =
-    isCellValid(column, row) &&
-      cell(column, row).cellType != CellType.EMPTY
-
-  def isCellValid(column: Int, row: Int): Boolean =
-    grid.isColumnValid(column) && grid.isRowValid(row)
 
   def removeSymbolFromColumn(column: Int): Unit = {
-    val lastFilledRow = findLastRowPosition(column)
+    val lastFilledRow = validator.lastRowPosition(column)
     grid.setupCell(Cell(column, lastFilledRow, CellType.EMPTY))
   }
 
-
-  def set(col: Int, row: Int, value: CellType): Unit = {
-    revertManager.execute(PlayedCommand(col, row, value, this))
-    gameStatus = StatusType.SET
-    publish(new PlayerGridChanged)
-  }
-
   def isMoveWinning(columnMove: Int): EffectType = {
-    val rowMove = findLastRowPosition(columnMove)
+    val rowMove = validator.lastRowPosition(columnMove)
     val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
     if (hasWon) {
       gameStatus = StatusType.FINISHED
       publish(new StatusBarChanged)
       return EffectType.WON
     }
-    if (isFull) return EffectType.DRAW
+    if (grid.isFull) return EffectType.DRAW
     EffectType.NOTHING
   }
 
-  def findLastRowPosition(column: Int): Int = {
-    findLowestEmptyRow(column) + 1
-  }
 }

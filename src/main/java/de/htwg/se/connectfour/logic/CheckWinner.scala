@@ -1,15 +1,16 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.Cell
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 
-class CheckWinner(val gridController: GridController) {
+case class CheckWinner(grid: Grid) {
+
+  val validator = Validator(grid)
 
   val NUMBER_OF_CELLS_TO_WIN = 4
   val CELLS_AROUND_TO_WIN: Int = NUMBER_OF_CELLS_TO_WIN - 1
 
   def checkForWinner(col: Int, row: Int): Boolean = {
-    val cell = gridController.cell(col, row)
+    val cell = grid.cell(col, row)
     val checkRound = CheckTurnWinner(cell)
     checkRound.checkLine(CheckType.VERTICAL) || checkRound.checkLine(CheckType.HORIZONTAL) ||
       checkRound.checkLine(CheckType.DIAGONAL_\) || checkRound.checkLine(CheckType.DIAGONAL_/)
@@ -33,24 +34,17 @@ class CheckWinner(val gridController: GridController) {
     }
 
     def processCheckType(i: Int, checkType: CheckType.Value): Boolean = {
+      val cellType = cell.cellType
       checkType match {
         case CheckType.HORIZONTAL =>
-          isValidAndSameType(cell.x + i, cell.y)
+          validator.isValidAndSameType(cell.x + i, cell.y, cellType)
         case CheckType.VERTICAL =>
-          isValidAndSameType(cell.x, cell.y + i)
+          validator.isValidAndSameType(cell.x, cell.y + i, cellType)
         case CheckType.DIAGONAL_\ =>
-          isValidAndSameType(cell.x + i, cell.y + i)
+          validator.isValidAndSameType(cell.x + i, cell.y + i, cellType)
         case CheckType.DIAGONAL_/ =>
-          isValidAndSameType(cell.x - i, cell.y + i)
+          validator.isValidAndSameType(cell.x - i, cell.y + i, cellType)
       }
-    }
-
-    def isValidAndSameType(x: Int, y: Int): Boolean = {
-      gridController.isCellValid(x, y) && isCellSameType(x, y)
-    }
-
-    private def isCellSameType(x: Int, y: Int): Boolean = {
-      gridController.cell(x, y).cellType == cell.cellType
     }
 
     def increaseOrResetCounter(oldValue: Int, shouldIncrease: Boolean): Int = {

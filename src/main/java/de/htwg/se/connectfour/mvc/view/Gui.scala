@@ -8,7 +8,7 @@ import de.htwg.se.connectfour.types.{CellType, EffectType}
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
 
-class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) extends Frame {
+case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) extends Frame {
 
   val columns: Int = gridController.columns
   val rows: Int = gridController.rows

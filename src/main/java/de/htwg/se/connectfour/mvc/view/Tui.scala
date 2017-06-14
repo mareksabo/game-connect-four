@@ -16,7 +16,17 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
 
   processInputLine("help")
   processInputLine("new 7 6")
+
   while (true) {
+    while (!gridController.gameFinished) {
+      val currentPlayer = gamingPlayers.currentPlayer
+      if (currentPlayer.isReal) {
+        processInputLine(StdIn.readLine())
+      } else {
+        processInputLine(currentPlayer.playTurn().toString)
+      }
+    }
+    println("Game is finished.")
     processInputLine(StdIn.readLine())
   }
 
@@ -24,23 +34,26 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
     val parsedInput = input.split(" ")
     try {
       parsedInput(0) match {
-        case "quit" => System.exit(0);
+        case "quit" => quit()
         case "new" => gridController.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
         case "undo" => gridController.undo()
         case "redo" => gridController.redo()
         case "show" => showGridWithMessage()
         case "help" => println("Commands are: help, new <num> <num>, quit, undo, redo, show, <num> <num>, <num>")
 
-        case _ => input.toList.filter(c => c != ' ').map(c => c.toString.toInt) match {
-          case row :: col :: Nil => println(gridController.cell(row, col))
-          case col :: Nil =>
-            val winType = gamingPlayers.applyTurn(col)
-            winType match {
-              case EffectType.WON => showWon()
-              case EffectType.DRAW => showDraw()
-              case EffectType.COLUMN_FULL => showGridWithMessage()
-              case EffectType.NOTHING =>
-            }
+        case _ => if (!gridController.gameFinished) {
+          input.toList.filter(c => c != ' ').map(c => c.toString.toInt) match {
+            case row :: col :: Nil => println(gridController.cell(row, col))
+            case col :: Nil =>
+              val winType = gamingPlayers.applyTurn(col)
+              winType match {
+                case EffectType.WON => showWon()
+                case EffectType.DRAW => showDraw()
+                case EffectType.COLUMN_FULL => showGridWithMessage()
+                case EffectType.FINISHED =>
+                case EffectType.NOTHING =>
+              }
+          }
         }
       }
     } catch {
@@ -69,4 +82,5 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
 
   def showGrid(): Unit = println(gridController.grid)
 
+  def quit(): Nothing = sys.exit(0)
 }

@@ -28,6 +28,7 @@ case class GamingPlayers(firstPlayer: Player, secondPlayer: Player, gridControll
   }
 
   def applyTurn(column: Int): EffectType = {
+    if (gridController.gameFinished) return EffectType.FINISHED
     if (gridController.isColumnFull(column)) return EffectType.COLUMN_FULL
     gridController.addCell(column, currentPlayerCellType)
     gridController.isMoveWinning(column)

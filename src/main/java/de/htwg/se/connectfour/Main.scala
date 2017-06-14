@@ -19,7 +19,7 @@ object Main {
     Console.print("Do you want to start gui (y/n): ")
     val input = "n" //StdIn.readLine()
     if (input.equalsIgnoreCase("y")) {
-      new Gui(gridController, players)
+      Gui(gridController, players)
     } else {
       Tui(gridController, players)
     }

@@ -17,6 +17,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   private val revertManager = new RevertManager
   private var checkWinner : CheckWinner = _
   private var validator : Validator = _
+  private var _gameFinished = false
 
   createEmptyGrid(columns, rows)
 
@@ -24,6 +25,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
 
   def createEmptyGrid(columns: Int, rows: Int): Unit = {
     grid = new Grid(columns, rows)
+    _gameFinished = false
     checkWinner = CheckWinner(grid)
     validator = Validator(grid)
     gameStatus = StatusType.NEW
@@ -69,10 +71,15 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     if (hasWon) {
       gameStatus = StatusType.FINISHED
       publish(new StatusBarChanged)
+      _gameFinished = true
       return EffectType.WON
+    } else if (grid.isFull) {
+      gameStatus = StatusType.DRAW
+      return EffectType.DRAW
     }
-    if (grid.isFull) return EffectType.DRAW
     EffectType.NOTHING
   }
+
+  def gameFinished: Boolean = _gameFinished
 
 }

@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.mvc.controller
+package de.htwg.se.connectfour.types
 
 object StatusType extends Enumeration {
   type GameStatus = Value

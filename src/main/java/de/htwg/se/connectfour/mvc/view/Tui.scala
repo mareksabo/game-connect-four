@@ -1,8 +1,7 @@
 package de.htwg.se.connectfour.mvc.view
 
-import de.htwg.se.connectfour.mvc.controller.{GridController, StatusType}
-import de.htwg.se.connectfour.mvc.model.EffectType
-import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
+import de.htwg.se.connectfour.mvc.controller.GridController
+import de.htwg.se.connectfour.types.{EffectType, StatusType}
 
 import scala.io.StdIn
 import scala.swing.Reactor

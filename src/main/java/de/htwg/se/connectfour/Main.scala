@@ -2,8 +2,8 @@ package de.htwg.se.connectfour
 
 import de.htwg.se.connectfour.mvc.controller.GridController
 import de.htwg.se.connectfour.mvc.model.Grid
-import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, GamingPlayers, RealPlayer}
-import de.htwg.se.connectfour.mvc.view.{Gui, Tui}
+import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, RealPlayer}
+import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
 
 object Main {
   def main(args: Array[String]): Unit = {

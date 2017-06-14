@@ -1,12 +1,12 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.logic.CheckWinner
-import de.htwg.se.connectfour.mvc.controller.StatusType.GameStatus
-import de.htwg.se.connectfour.mvc.model.CellType.CellType
-import de.htwg.se.connectfour.mvc.model.EffectType.EffectType
-import de.htwg.se.connectfour.mvc.model.{Cell, CellType, EffectType, Grid}
+import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager}
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.mvc.view.{GridChanged, PlayerGridChanged, StatusBarChanged}
-import de.htwg.se.connectfour.pattern.{PlayedColumn, RevertManager}
+import de.htwg.se.connectfour.types.CellType.CellType
+import de.htwg.se.connectfour.types.EffectType.EffectType
+import de.htwg.se.connectfour.types.StatusType.GameStatus
+import de.htwg.se.connectfour.types.{CellType, EffectType, StatusType}
 
 import scala.swing.Publisher
 
@@ -49,7 +49,7 @@ class GridController(var grid: Grid) extends Publisher {
   def statusText: String = StatusType.message(gameStatus)
 
   def addCell(column: Int, cellType: CellType): Unit = {
-      revertManager.execute(PlayedColumn(column, findLowestEmptyRow(column), cellType, this))
+      revertManager.execute(PlayedCommand(column, findLowestEmptyRow(column), cellType, this))
       gameStatus = StatusType.SET
       publish(new PlayerGridChanged)
 
@@ -87,7 +87,7 @@ class GridController(var grid: Grid) extends Publisher {
 
 
   def set(col: Int, row: Int, value: CellType): Unit = {
-    revertManager.execute(PlayedColumn(col, row, value, this))
+    revertManager.execute(PlayedCommand(col, row, value, this))
     gameStatus = StatusType.SET
     publish(new PlayerGridChanged)
   }

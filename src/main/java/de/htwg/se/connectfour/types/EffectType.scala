@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.mvc.model
+package de.htwg.se.connectfour.types
 
 object EffectType extends Enumeration {
   type EffectType = Value

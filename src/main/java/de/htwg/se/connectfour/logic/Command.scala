@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.pattern
+package de.htwg.se.connectfour.logic
 
 trait Command {
   def execute() : Unit

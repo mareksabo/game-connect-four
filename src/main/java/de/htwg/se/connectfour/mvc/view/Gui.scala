@@ -3,8 +3,7 @@ package de.htwg.se.connectfour.mvc.view
 import java.awt.Color
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.{CellType, EffectType}
-import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
+import de.htwg.se.connectfour.types.{CellType, EffectType}
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}

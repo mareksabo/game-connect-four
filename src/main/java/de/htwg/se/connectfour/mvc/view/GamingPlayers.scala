@@ -1,10 +1,10 @@
-package de.htwg.se.connectfour.mvc.model.player
+package de.htwg.se.connectfour.mvc.view
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.{CellType, EffectType}
-import de.htwg.se.connectfour.mvc.model.CellType.CellType
-import de.htwg.se.connectfour.mvc.model.EffectType.EffectType
-import de.htwg.se.connectfour.mvc.view.PlayerGridChanged
+import de.htwg.se.connectfour.mvc.model.player.Player
+import de.htwg.se.connectfour.types.CellType.CellType
+import de.htwg.se.connectfour.types.EffectType.EffectType
+import de.htwg.se.connectfour.types.{CellType, EffectType}
 
 import scala.swing.Reactor
 

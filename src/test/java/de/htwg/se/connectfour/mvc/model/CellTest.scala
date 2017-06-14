@@ -1,5 +1,6 @@
 package de.htwg.se.connectfour.mvc.model
 
+import de.htwg.se.connectfour.types.CellType
 import org.specs2.mutable.Specification
 
 class CellTest extends Specification {

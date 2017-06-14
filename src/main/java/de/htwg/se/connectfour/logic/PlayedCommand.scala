@@ -1,10 +1,10 @@
-package de.htwg.se.connectfour.pattern
+package de.htwg.se.connectfour.logic
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.CellType
-import de.htwg.se.connectfour.mvc.model.CellType.CellType
+import de.htwg.se.connectfour.types.CellType
+import de.htwg.se.connectfour.types.CellType.CellType
 
-case class PlayedColumn(col: Int, row: Int, cellType: CellType, gridController: GridController) extends Command {
+case class PlayedCommand(col: Int, row: Int, cellType: CellType, gridController: GridController) extends Command {
 
   override def execute(): Unit = {
     gridController.grid.set(col, row, cellType)

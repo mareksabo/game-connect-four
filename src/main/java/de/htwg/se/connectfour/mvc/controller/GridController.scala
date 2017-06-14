@@ -99,8 +99,8 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
     if (hasWon) {
       gameStatus = StatusType.FINISHED
-      publish(new PlayerWon)
       _gameFinished = true
+      publish(new PlayerWon)
     } else if (grid.isFull) {
       gameStatus = StatusType.DRAW
       publish(new Draw)

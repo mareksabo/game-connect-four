@@ -16,6 +16,5 @@ class CellTest extends Specification {
       cell.toString must be_==(" ")
     }
 
-
   }
 }

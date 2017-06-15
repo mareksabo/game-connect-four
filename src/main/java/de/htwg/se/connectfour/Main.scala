@@ -20,7 +20,7 @@ object Main extends LazyLogging{
     startGame(controller, players)
   }
 
-  def startGame(controller: GridController, players: GamingPlayers): Unit = {
+  def startGame(controller: Controller, players: GamingPlayers): Unit = {
     Console.print("Do you want to start gui (y/n): ")
     val input = StdIn.readLine() //n
     if (input.equalsIgnoreCase("y")) {

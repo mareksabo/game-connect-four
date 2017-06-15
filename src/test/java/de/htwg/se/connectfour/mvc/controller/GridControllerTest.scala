@@ -36,7 +36,7 @@ class GridControllerTest extends Specification {
 
 
     "have won with this move (horizontal)" in {
-      val localGridController = new GridController
+      val localGridController = GridController(7, 6)
       for (_ <- 0 until 4) {
         localGridController.checkAddCell(0, CellType.FIRST)
       }

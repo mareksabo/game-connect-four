@@ -1,5 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
+import com.google.inject.Inject
+import com.google.inject.name.Named
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.types.CellType.CellType
@@ -8,18 +10,17 @@ import de.htwg.se.connectfour.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
-case class GridController(columns: Int, rows: Int) extends Publisher with Controller {
+case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller {
+
+  private val revertManager = new RevertManager
 
   private var _grid: Grid = _
   private var gameStatus: GameStatus = StatusType.NEW
-  private val revertManager = new RevertManager
   private var checkWinner: CheckWinner = _
   private var validator: Validator = _
   private var _gameFinished = false
 
   createEmptyGrid(columns, rows)
-
-  def this() = this(7, 6)
 
   override def createEmptyGrid(columns: Int, rows: Int): Unit = {
     _grid = new GridImpl(columns, rows)

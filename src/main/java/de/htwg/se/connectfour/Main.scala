@@ -1,18 +1,20 @@
 package de.htwg.se.connectfour
 
-import de.htwg.se.connectfour.mvc.controller.{Controller, GridController}
+import com.google.inject.Guice
+import de.htwg.se.connectfour.mvc.controller.Controller
 import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
 
 object Main {
   def main(args: Array[String]): Unit = {
 
-    val gridController = new GridController()
+    val injector = Guice.createInjector(new ConnectFourModule)
+    val controller = injector.getInstance(classOf[Controller])
     val player1 = RealPlayer("Marek")
-    val player2 = RandomBotPlayer(gridController)
-    val players = GamingPlayers(player1, player2, gridController)
+    val player2 = RandomBotPlayer(controller)
+    val players = GamingPlayers(player1, player2, controller)
 
-    startGame(gridController, players)
+    startGame(controller, players)
   }
 
   def startGame(controller: Controller, players: GamingPlayers): Unit = {

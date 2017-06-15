@@ -1,5 +1,6 @@
 package de.htwg.se.connectfour.mvc.controller
 
+import com.typesafe.scalalogging.{LazyLogging, Logger}
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.mvc.view.{Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
@@ -9,7 +10,7 @@ import de.htwg.se.connectfour.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
-case class GridController(columns: Int, rows: Int) extends Publisher {
+case class GridController(columns: Int, rows: Int) extends Publisher with LazyLogging{
 
   var grid: Grid = _
   private var gameStatus: GameStatus = StatusType.NEW
@@ -23,6 +24,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   def this() = this(7, 6)
 
   def createEmptyGrid(columns: Int, rows: Int): Unit = {
+    logger.debug("created empty grids")
     grid = new Grid(columns, rows)
     _gameFinished = false
     checkWinner = CheckWinner(grid)
@@ -32,6 +34,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   }
 
   def undo(): Unit = {
+    logger.info("undid last move")
     val didUndo = revertManager.undo()
     if (didUndo) {
       gameStatus = StatusType.UNDO
@@ -43,6 +46,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   }
 
   def redo(): Unit = {
+    logger.info("redid move")
     val didRedo = revertManager.redo()
     if (didRedo) {
       gameStatus = StatusType.REDO
@@ -66,6 +70,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   private def isInvalid(column: Int) = gameFinished || isColumnFull(column) || !isColumnValid(column)
 
   private def addCell(column: Int, cellType: CellType): Unit = {
+    logger.info("added cell of type " +cellType+" at: " + column)
     revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
     gameStatus = StatusType.SET
     publish(new PlayerGridChanged)
@@ -74,6 +79,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   private def isColumnValid(column: Int): Boolean = {
     val valid = grid.isColumnValid(column)
     if (!valid) {
+      logger.warn("tried to insert into invalid column: " + column)
       gameStatus = StatusType.INVALID
       publish(new InvalidMove)
     }
@@ -83,6 +89,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   def isColumnFull(column: Int): Boolean = {
     val isFull = validator.isColumnFull(column)
     if (isFull) {
+      logger.warn("tried to insert into full column:  " + column)
       gameStatus = StatusType.FULL
       publish(new FilledColumn)
     }
@@ -98,10 +105,12 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     val rowMove = validator.lastRowPosition(columnMove)
     val hasWon = checkWinner.checkForWinner(columnMove, rowMove)
     if (hasWon) {
+      logger.info("game has finished")
       gameStatus = StatusType.FINISHED
       _gameFinished = true
       publish(new PlayerWon)
     } else if (grid.isFull) {
+      logger.info("game has finished with draw")
       gameStatus = StatusType.DRAW
       publish(new Draw)
     }

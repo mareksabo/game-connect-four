@@ -1,10 +1,13 @@
 package de.htwg.se.connectfour
 
+import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.mvc.controller.GridController
 import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, RealPlayer}
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
 
-object Main {
+import scala.io.StdIn
+
+object Main extends LazyLogging{
   def main(args: Array[String]): Unit = {
 
     val gridController = new GridController()
@@ -17,10 +20,12 @@ object Main {
 
   def startGame(gridController: GridController, players: GamingPlayers): Unit = {
     Console.print("Do you want to start gui (y/n): ")
-    val input = "n" //StdIn.readLine()
+    val input = StdIn.readLine() //n
     if (input.equalsIgnoreCase("y")) {
+      logger.info("started GUI")
       Gui(gridController, players)
     } else {
+      logger.info("started TUI")
       Tui(gridController, players)
     }
   }

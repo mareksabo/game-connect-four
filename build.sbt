@@ -15,7 +15,9 @@ libraryDependencies ++= {
     // to use the same version here.
     "org.scalacheck" %% "scalacheck" % "1.13.4",
     "org.specs2" %% "specs2-core" % specs2Version,
-    "org.specs2" %% "specs2-scalacheck" % specs2Version
+    "org.specs2" %% "specs2-scalacheck" % specs2Version,
+    "ch.qos.logback" % "logback-classic" % "1.1.7",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
   )
 }
 libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"

@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.types.CellType.CellType
 import de.htwg.se.connectfour.types.StatusType.GameStatus
 import de.htwg.se.connectfour.types.{CellType, StatusType}
@@ -22,7 +22,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher with Contro
   def this() = this(7, 6)
 
   override def createEmptyGrid(columns: Int, rows: Int): Unit = {
-    _grid = new Grid(columns, rows)
+    _grid = new GridImpl(columns, rows)
     _gameFinished = false
     checkWinner = CheckWinner(_grid)
     validator = Validator(_grid)

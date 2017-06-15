@@ -1,14 +1,14 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.types.CellType.CellType
 
 class MockController extends Controller {
 
-  private var _grid: Grid = new Grid(7, 6)
+  private var _grid: Grid = new GridImpl(7, 6)
 
   override def createEmptyGrid(columns: Int, rows: Int): Unit = {
-    _grid = new Grid(columns, rows)
+    _grid = new GridImpl(columns, rows)
   }
 
   override def columns: Int = grid.columns

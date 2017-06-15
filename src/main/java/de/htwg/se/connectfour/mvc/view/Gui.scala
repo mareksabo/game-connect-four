@@ -2,19 +2,17 @@ package de.htwg.se.connectfour.mvc.view
 
 import java.awt.Color
 
-import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
-import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
+import de.htwg.se.connectfour.mvc.controller._
 import de.htwg.se.connectfour.types.CellType
 
-import scala.swing.event.{ButtonClicked, Key}
-import scala.swing.{Action, BorderPanel, Button, CheckBox, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
+import scala.swing.event.Key
+import scala.swing._
 
 case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame {
 
   val columns: Int = controller.columns
   val rows: Int = controller.rows
   val statusLine = new TextField(controller.statusText, 20)
-  val isOpponentRealBox = new CheckBox("Real player")
 
   val blocks: Array[Array[Label]] = {
     val blocks: Array[Array[Label]] = Array.ofDim[Label](columns, rows)
@@ -31,7 +29,6 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
   setupMainFrame()
   setupReactions
   listenTo(controller)
-  listenTo(isOpponentRealBox)
 
   def setupMainFrame(): Unit = {
     val WIDTH = 700
@@ -78,7 +75,6 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
       contents += new MenuItem(Action("Redo") {
         controller.redo()
       })
-      contents += isOpponentRealBox
     }
   }
 
@@ -90,7 +86,6 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
       case _: Draw => showDraw()
       case _: FilledColumn => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
       case _: InvalidMove => redraw()
-      case ButtonClicked(`isOpponentRealBox`) => startNewGame()
     }
   }
 
@@ -126,7 +121,8 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
   def showWon(): Unit = {
     val winner = "Player " + gamingPlayers.previousPlayer.name + " has won"
     val option = Dialog.showConfirmation(message = "Play a new game?", optionType = Dialog.Options.YesNo, title = winner)
-    startNewOrQuit(option == Dialog.Result.Ok)
+    newDimensions()
+    //startNewOrQuit(option == Dialog.Result.Ok)
   }
 
   def showDraw(): Unit = {
@@ -134,15 +130,37 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
     startNewOrQuit(option == Dialog.Result.Ok)
   }
 
-  def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()
-
-  def startNewGame(): Unit = {
-    controller.createEmptyGrid(controller.columns, controller.rows)
-    val secondPlayer = if (isOpponentRealBox.selected) RealPlayer("David") else RandomBotPlayer(controller)
-    gamingPlayers.setSecondPlayer(secondPlayer)
+  def newDimensions(): Unit = {
+    val dimensionMainFrame = new MainFrame()
+    val field1 = new TextField(columns.toString)
+    val field2 = new TextField(rows.toString)
+    val columLabel = new Label("column")
+    val rowLabel = new Label("row")
+    val okButton = Button("Ok")(startWithNewDimension(field1.text.toInt, field2.text.toInt, dimensionMainFrame))
+    val cancelButton = Button("Cancel")(dimensionMainFrame.visible = false)
+    dimensionMainFrame.contents = new GridPanel(3, 2){
+      contents += columLabel
+      contents += field1
+      contents += rowLabel
+      contents += field2
+      contents += okButton
+      contents += cancelButton
+    }
+    dimensionMainFrame.title = "set new Dimension"
+    dimensionMainFrame.preferredSize = new Dimension(200,200)
+    dimensionMainFrame.centerOnScreen()
+    dimensionMainFrame.visible = true
   }
 
-  def quit(): Unit = sys.exit(0)
+  def startWithNewDimension(column: Int, row: Int, mainFrame: MainFrame): Unit = {
+      controller.createEmptyGrid(column, row)
+      mainFrame.visible = false
+  }
 
+  def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()
+
+  def startNewGame(): Unit = controller.createEmptyGrid(controller.columns, controller.rows)
+
+  def quit(): Unit = sys.exit(0)
 
 }

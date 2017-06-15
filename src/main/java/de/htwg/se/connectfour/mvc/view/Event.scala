@@ -6,5 +6,10 @@ class PlayerGridChanged extends Event
 
 class GridChanged extends Event
 
-class StatusBarChanged extends Event
+class PlayerWon extends Event
 
+class Draw extends Event
+
+class FilledColumn extends Event
+
+class InvalidMove extends Event

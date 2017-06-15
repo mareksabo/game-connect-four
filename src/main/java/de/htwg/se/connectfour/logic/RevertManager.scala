@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.pattern
+package de.htwg.se.connectfour.logic
 
 class RevertManager {
 
@@ -11,22 +11,24 @@ class RevertManager {
     command.execute()
   }
 
-  def undo(): Unit = {
-    if (undoStack.isEmpty) return
+  def undo(): Boolean = {
+    if (undoStack.isEmpty) return false
 
     val head :: stack = undoStack
     head.undo()
     undoStack = stack
     redoStack = head :: redoStack
+    true
   }
 
-  def redo(): Unit = {
-    if (redoStack.isEmpty) return
+  def redo(): Boolean = {
+    if (redoStack.isEmpty) return false
 
     val head :: stack = redoStack
     head.redo()
     redoStack = stack
     undoStack = head :: undoStack
+    true
   }
 
 }

@@ -6,4 +6,6 @@ trait Player {
   def playTurn(): Int
 
   def isReal: Boolean
+
+  override def toString: String = name
 }

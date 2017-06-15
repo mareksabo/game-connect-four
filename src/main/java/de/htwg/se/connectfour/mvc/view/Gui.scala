@@ -3,16 +3,15 @@ package de.htwg.se.connectfour.mvc.view
 import java.awt.Color
 
 import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.CellType
-import de.htwg.se.connectfour.mvc.model.player.GamingPlayers
+import de.htwg.se.connectfour.types.CellType
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
 
-class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) extends Frame {
+case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) extends Frame {
 
-  val columns: Int = gridController.columnSize
-  val rows: Int = gridController.rowSize
+  val columns: Int = gridController.columns
+  val rows: Int = gridController.rows
   val statusLine = new TextField(gridController.statusText, 20)
 
   val blocks: Array[Array[Label]] = {
@@ -81,43 +80,32 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
 
   def setupReactions: reactions.type = {
     reactions += {
-      case _: PlayerGridChanged =>
-        gamingPlayers.changePlayer()
-        redraw()
-        statusLine.text = gridController.statusText
-      case _: GridChanged =>
-        redraw()
-        statusLine.text = gridController.statusText
-      case _: StatusBarChanged =>
-        statusLine.text = gridController.statusText
+      case _: PlayerGridChanged => redraw()
+      case _: GridChanged => redraw()
+      case _: PlayerWon => showWon()
+      case _: Draw => showDraw()
+      case _: FilledColumn => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
+      case _: InvalidMove => redraw()
     }
   }
 
   def buttonAction(chosenColumn: Int): Unit = {
-    evaluateMove(chosenColumn)
-    if (!gamingPlayers.currentPlayer.isReal) playBot()
+    gamingPlayers.applyTurn(chosenColumn)
+    playBotIfGoing()
   }
 
-  def playBot(): Unit = {
-    val robotsColumn = gamingPlayers.currentPlayer.playTurn()
-    evaluateMove(robotsColumn)
-  }
-
-  def evaluateMove(chosenColumn: Int): Unit = {
-
-    val columnFull: Boolean = gridController.isColumnFull(chosenColumn)
-
-    if (columnFull) {
-      Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
-      return
+  def playBotIfGoing(): Unit = {
+    if (!gamingPlayers.currentPlayer.isReal) {
+      val robotsColumn = gamingPlayers.currentPlayer.playTurn()
+      gamingPlayers.applyTurn(robotsColumn)
     }
-
-    gridController.addCell(chosenColumn, gamingPlayers.currentPlayerCellType())
-    if (gridController.isMoveWinning(chosenColumn)) showWon()
-    else if (gridController.isFull) showDraw()
   }
 
-  def redraw(): Unit = for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)
+
+  def redraw(): Unit = {
+    for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)
+    statusLine.text = gridController.statusText
+  }
 
   def redrawCell(column: Int, row: Int): Unit = {
     gridController.cell(column, row).cellType match {
@@ -141,9 +129,9 @@ class Gui(val gridController: GridController, val gamingPlayers: GamingPlayers) 
     startNewOrQuit(option == Dialog.Result.Ok)
   }
 
-  def startNewOrQuit(startNew: Boolean) : Unit = if(startNew) startNewGame() else quit()
+  def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()
 
-  def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columnSize, gridController.rowSize)
+  def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columns, gridController.rows)
 
   def quit(): Unit = sys.exit(0)
 

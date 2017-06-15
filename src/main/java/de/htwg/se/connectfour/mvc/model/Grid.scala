@@ -1,6 +1,7 @@
 package de.htwg.se.connectfour.mvc.model
 
-import de.htwg.se.connectfour.mvc.model.CellType.CellType
+import de.htwg.se.connectfour.types.CellType
+import de.htwg.se.connectfour.types.CellType.CellType
 
 /**
   * Gaming 2D grid with starting coordinates in left upper corner.
@@ -21,8 +22,6 @@ class Grid(val columns: Int, val rows: Int) {
 
   val MAX_COLUMN: Int = columns - 1
   val MAX_ROW: Int = rows - 1
-
-  def this() = this(7, 6)
 
   private val cells: Array[Array[Cell]] = Array.ofDim[Cell](columns, rows)
   emptyGrid()

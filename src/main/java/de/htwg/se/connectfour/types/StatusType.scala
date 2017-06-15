@@ -1,13 +1,14 @@
-package de.htwg.se.connectfour.mvc.controller
+package de.htwg.se.connectfour.types
 
 object StatusType extends Enumeration {
   type GameStatus = Value
-  val STARTED, NEW, SET, FULL, DRAW, UNDO, REDO, FINISHED = Value
+  val STARTED, NEW, SET, FULL, INVALID, DRAW, UNDO, REDO, FINISHED = Value
 
   val map: Map[GameStatus, String] = Map[GameStatus, String](
     NEW -> "A new game was created",
     SET -> "A cell was set",
     FULL -> "Column is full",
+    INVALID -> "Invalid command",
     DRAW -> "Draw game",
     UNDO -> "One step reverted",
     REDO -> "One step reapplied",

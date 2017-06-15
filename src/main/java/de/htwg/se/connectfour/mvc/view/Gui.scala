@@ -3,16 +3,18 @@ package de.htwg.se.connectfour.mvc.view
 import java.awt.Color
 
 import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
+import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import de.htwg.se.connectfour.types.CellType
 
-import scala.swing.event.Key
-import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
+import scala.swing.event.{ButtonClicked, Key}
+import scala.swing.{Action, BorderPanel, Button, CheckBox, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
 
 case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame {
 
   val columns: Int = controller.columns
   val rows: Int = controller.rows
   val statusLine = new TextField(controller.statusText, 20)
+  val isOpponentRealBox = new CheckBox("Real player")
 
   val blocks: Array[Array[Label]] = {
     val blocks: Array[Array[Label]] = Array.ofDim[Label](columns, rows)
@@ -29,6 +31,7 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
   setupMainFrame()
   setupReactions
   listenTo(controller)
+  listenTo(isOpponentRealBox)
 
   def setupMainFrame(): Unit = {
     val WIDTH = 700
@@ -75,6 +78,7 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
       contents += new MenuItem(Action("Redo") {
         controller.redo()
       })
+      contents += isOpponentRealBox
     }
   }
 
@@ -86,6 +90,7 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
       case _: Draw => showDraw()
       case _: FilledColumn => Dialog.showMessage(message = "Please choose another one.", title = "Column is filled")
       case _: InvalidMove => redraw()
+      case ButtonClicked(`isOpponentRealBox`) => startNewGame()
     }
   }
 
@@ -131,7 +136,11 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
 
   def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()
 
-  def startNewGame(): Unit = controller.createEmptyGrid(controller.columns, controller.rows)
+  def startNewGame(): Unit = {
+    controller.createEmptyGrid(controller.columns, controller.rows)
+    val secondPlayer = if (isOpponentRealBox.selected) RealPlayer("David") else RandomBotPlayer(controller)
+    gamingPlayers.setSecondPlayer(secondPlayer)
+  }
 
   def quit(): Unit = sys.exit(0)
 

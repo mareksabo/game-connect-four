@@ -1,13 +1,13 @@
 package de.htwg.se.connectfour
 
-import de.htwg.se.connectfour.mvc.controller.{Controller, MockController}
+import de.htwg.se.connectfour.mvc.controller.{Controller, GridController}
 import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, RealPlayer}
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
 
 object Main {
   def main(args: Array[String]): Unit = {
 
-    val gridController = new MockController()
+    val gridController = new GridController()
     val player1 = RealPlayer("Marek")
     val player2 = DumbBotPlayer(gridController)
     val players = GamingPlayers(player1, player2, gridController)

@@ -4,6 +4,7 @@ import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.types.CellType.CellType
 
 import scala.swing.Publisher
+import scala.swing.event.Event
 
 trait Controller extends Publisher {
 
@@ -31,3 +32,16 @@ trait Controller extends Publisher {
 
   def grid: Grid
 }
+
+class PlayerGridChanged extends Event
+
+class GridChanged extends Event
+
+class PlayerWon extends Event
+
+class Draw extends Event
+
+class FilledColumn extends Event
+
+class InvalidMove extends Event
+

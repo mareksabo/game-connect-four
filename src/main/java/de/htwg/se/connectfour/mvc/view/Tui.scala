@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.view
 
-import de.htwg.se.connectfour.mvc.controller.Controller
+import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 
 import scala.io.StdIn
 import scala.swing.Reactor

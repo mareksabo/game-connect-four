@@ -2,7 +2,7 @@ package de.htwg.se.connectfour.mvc.view
 
 import java.awt.Color
 
-import de.htwg.se.connectfour.mvc.controller.Controller
+import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 import de.htwg.se.connectfour.types.CellType
 
 import scala.swing.event.Key

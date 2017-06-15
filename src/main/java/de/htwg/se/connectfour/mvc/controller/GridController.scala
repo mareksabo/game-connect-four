@@ -2,7 +2,6 @@ package de.htwg.se.connectfour.mvc.controller
 
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
-import de.htwg.se.connectfour.mvc.view.{Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 import de.htwg.se.connectfour.types.CellType.CellType
 import de.htwg.se.connectfour.types.StatusType.GameStatus
 import de.htwg.se.connectfour.types.{CellType, StatusType}

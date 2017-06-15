@@ -1,10 +1,11 @@
 package de.htwg.se.connectfour.mvc.controller
+
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 import de.htwg.se.connectfour.types.CellType.CellType
 
 class MockController extends Controller {
 
-  private var _grid : Grid = new Grid(7, 6)
+  private var _grid: Grid = new Grid(7, 6)
 
   override def createEmptyGrid(columns: Int, rows: Int): Unit = {
     _grid = new Grid(columns, rows)
@@ -22,11 +23,11 @@ class MockController extends Controller {
 
   override def statusText: String = "Sample text"
 
-  override def checkAddCell(column: Int, cellType: CellType): Unit = { }
+  override def checkAddCell(column: Int, cellType: CellType): Unit = {}
 
   override def isColumnFull(column: Int): Boolean = false
 
-  override def removeSymbolFromColumn(column: Int): Unit = { }
+  override def removeSymbolFromColumn(column: Int): Unit = {}
 
   override def gameFinished: Boolean = false
 

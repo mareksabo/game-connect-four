@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
-import de.htwg.se.connectfour.types.{CellType, StatusType}
+import de.htwg.se.connectfour.types.CellType
 import org.specs2.mutable.Specification
 
 
@@ -15,12 +15,11 @@ class GridControllerTest extends Specification {
     grid.setupCell(xCell)
     grid.setupCell(oCell)
 
-    val gridController = new GridController(3,2)
-
+    val gridController = new GridController(3, 2)
 
 
     "have statusText" in {
-      val localGridController = GridController(3,2)
+      val localGridController = GridController(3, 2)
       localGridController.statusText must be_==("A new game was created")
     }
 
@@ -29,12 +28,11 @@ class GridControllerTest extends Specification {
     }
 
     "have removed symbol from column" in {
-      val localGridController = GridController(3,2)
+      val localGridController = GridController(3, 2)
       localGridController.checkAddCell(0, CellType.FIRST)
       localGridController.removeSymbolFromColumn(0)
       localGridController.cell(0, 0).cellType must be_==(CellType.EMPTY)
     }
-
 
 
     "have won with this move (horizontal)" in {
@@ -46,7 +44,7 @@ class GridControllerTest extends Specification {
     }
 
     "have also won with this move (vertical)" in {
-      val localGridController = GridController(7,6)
+      val localGridController = GridController(7, 6)
       for (column <- 0 until 4) {
         localGridController.checkAddCell(column, CellType.FIRST)
       }
@@ -55,12 +53,12 @@ class GridControllerTest extends Specification {
     }
 
     "have also won with this move (diagonal)" in {
-      val localGridController = GridController(7,6)
+      val localGridController = GridController(7, 6)
       var counter = 0
       //setting up 3 cells
       for (column <- 2 until 5) {
         localGridController.grid.set(counter, column, CellType.FIRST)
-        counter+=1
+        counter += 1
       }
       //adds last cell to and checks if someone won
       localGridController.checkAddCell(3, CellType.FIRST)
@@ -68,12 +66,12 @@ class GridControllerTest extends Specification {
     }
 
     "have also won with this move (diagonal)" in {
-      val localGridController = GridController(7,6)
+      val localGridController = GridController(7, 6)
       var counter = 3
       //setting up 3 cells
       for (column <- 2 until 5) {
         localGridController.grid.set(counter, column, CellType.FIRST)
-        counter-=1
+        counter -= 1
       }
       //adds last cell to and checks if someone won
       localGridController.checkAddCell(0, CellType.FIRST)

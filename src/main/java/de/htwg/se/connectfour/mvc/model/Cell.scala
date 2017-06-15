@@ -9,7 +9,7 @@ case class Cell(x: Int, y: Int, cellType: CellType) {
     this(x, y, CellType.EMPTY)
   }
 
-  override def toString: String  = cellType.toString
+  override def toString: String = cellType.toString
 
 
 }

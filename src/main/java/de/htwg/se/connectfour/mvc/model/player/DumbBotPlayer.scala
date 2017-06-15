@@ -15,7 +15,7 @@ case class DumbBotPlayer(gridController: GridController) extends Player {
     var robotsColumn: Int = -1
     if (grid.isFull) return -1
     do {
-    robotsColumn = r.nextInt(grid.columns)
+      robotsColumn = r.nextInt(grid.columns)
     } while (!validator.isColumnValidAndNotFull(robotsColumn))
     robotsColumn
   }

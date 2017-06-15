@@ -1,14 +1,13 @@
 package de.htwg.se.connectfour.logic
 
-import de.htwg.se.connectfour.mvc.controller.GridController
 import de.htwg.se.connectfour.mvc.model.Grid
 import de.htwg.se.connectfour.types.CellType
 import org.specs2.mutable.Specification
 
 
-class PlayedCommandTest extends Specification{
+class PlayedCommandTest extends Specification {
   "A played column" should {
-    val grid = new Grid(2,3)
+    val grid = new Grid(2, 3)
     val playedColumn = PlayedCommand(0, 0, CellType.FIRST, grid)
     "undo turn should be empty" in {
       playedColumn.undo()

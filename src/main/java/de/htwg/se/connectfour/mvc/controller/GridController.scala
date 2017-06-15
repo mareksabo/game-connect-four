@@ -2,7 +2,7 @@ package de.htwg.se.connectfour.mvc.controller
 
 import com.google.inject.Inject
 import com.google.inject.name.Named
-import com.typesafe.scalalogging.{LazyLogging, Logger}
+import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.types.CellType.CellType
@@ -112,6 +112,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     } else if (grid.isFull) {
       logger.info("game has finished with draw")
       gameStatus = StatusType.DRAW
+      _gameFinished = true
       publish(new Draw)
     }
   }

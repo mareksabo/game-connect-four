@@ -12,7 +12,7 @@ class GamingPlayersTest extends Specification {
     val player1 = RealPlayer("David")
     val player2 = RealPlayer("Marek")
     val gridController = GridController(2, 3)
-    val gamingPlayers = GamingPlayers(player1, player2, gridController)
+    val gamingPlayers = new GamingPlayers(player1, player2, gridController)
     "be set right" in {
       gamingPlayers.isFirstGoing must be_==(true)
     }
@@ -27,7 +27,7 @@ class GamingPlayersTest extends Specification {
     }
     "change Player after a turn" in {
       val localGridController = GridController(2, 3)
-      val localGamingPlayers = GamingPlayers(player1, player2, localGridController)
+      val localGamingPlayers = new GamingPlayers(player1, player2, localGridController)
       localGamingPlayers.applyTurn(0)
       localGamingPlayers.currentPlayer must be_==(player2)
     }

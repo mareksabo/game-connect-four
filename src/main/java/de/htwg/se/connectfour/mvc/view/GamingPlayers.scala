@@ -7,7 +7,7 @@ import de.htwg.se.connectfour.types.CellType.CellType
 
 import scala.swing.Reactor
 
-case class GamingPlayers(firstPlayer: Player, secondPlayer: Player, controller: Controller) extends Reactor {
+class GamingPlayers(firstPlayer: Player, var secondPlayer: Player, controller: Controller) extends Reactor {
 
   listenTo(controller)
   reactions += {
@@ -28,6 +28,10 @@ case class GamingPlayers(firstPlayer: Player, secondPlayer: Player, controller: 
 
   def applyTurn(column: Int): Unit = {
     controller.checkAddCell(column, currentPlayerCellType)
+  }
+
+  def setSecondPlayer(second: Player): Unit = {
+    secondPlayer = second
   }
 
   def currentPlayerCellType: CellType = cellType(currentPlayer)

@@ -15,14 +15,14 @@ object Main extends LazyLogging{
     val controller = injector.getInstance(classOf[Controller])
     val player1 = RealPlayer("Marek")
     val player2 = RandomBotPlayer(controller)
-    val players = GamingPlayers(player1, player2, controller)
+    val players = new GamingPlayers(player1, player2, controller)
 
     startGame(controller, players)
   }
 
   def startGame(controller: Controller, players: GamingPlayers): Unit = {
     Console.print("Do you want to start gui (y/n): ")
-    val input = StdIn.readLine() //n
+    val input = StdIn.readLine()
     if (input.equalsIgnoreCase("y")) {
       logger.info("started GUI")
       Gui(controller, players)

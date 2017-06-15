@@ -9,9 +9,9 @@ import de.htwg.se.connectfour.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
-case class GridController(columns: Int, rows: Int) extends Publisher {
+case class GridController(columns: Int, rows: Int) extends Publisher with Controller {
 
-  var grid: Grid = _
+  private var _grid: Grid = _
   private var gameStatus: GameStatus = StatusType.NEW
   private val revertManager = new RevertManager
   private var checkWinner: CheckWinner = _
@@ -22,16 +22,16 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
 
   def this() = this(7, 6)
 
-  def createEmptyGrid(columns: Int, rows: Int): Unit = {
-    grid = new Grid(columns, rows)
+  override def createEmptyGrid(columns: Int, rows: Int): Unit = {
+    _grid = new Grid(columns, rows)
     _gameFinished = false
-    checkWinner = CheckWinner(grid)
-    validator = Validator(grid)
+    checkWinner = CheckWinner(_grid)
+    validator = Validator(_grid)
     gameStatus = StatusType.NEW
     publish(new GridChanged)
   }
 
-  def undo(): Unit = {
+  override def undo(): Unit = {
     val didUndo = revertManager.undo()
     if (didUndo) {
       gameStatus = StatusType.UNDO
@@ -42,7 +42,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     }
   }
 
-  def redo(): Unit = {
+  override def redo(): Unit = {
     val didRedo = revertManager.redo()
     if (didRedo) {
       gameStatus = StatusType.REDO
@@ -53,11 +53,11 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     }
   }
 
-  def cell(col: Int, row: Int): Cell = grid.cell(col, row)
+  override def cell(col: Int, row: Int): Cell = _grid.cell(col, row)
 
-  def statusText: String = StatusType.message(gameStatus)
+  override def statusText: String = StatusType.message(gameStatus)
 
-  def checkAddCell(column: Int, cellType: CellType): Unit = {
+  override def checkAddCell(column: Int, cellType: CellType): Unit = {
     if (isInvalid(column)) return
     addCell(column, cellType)
     checkFinish(column)
@@ -66,13 +66,13 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
   private def isInvalid(column: Int) = gameFinished || isColumnFull(column) || !isColumnValid(column)
 
   private def addCell(column: Int, cellType: CellType): Unit = {
-    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, grid))
+    revertManager.execute(PlayedCommand(column, validator.lowestEmptyRow(column), cellType, _grid))
     gameStatus = StatusType.SET
     publish(new PlayerGridChanged)
   }
 
   private def isColumnValid(column: Int): Boolean = {
-    val valid = grid.isColumnValid(column)
+    val valid = _grid.isColumnValid(column)
     if (!valid) {
       gameStatus = StatusType.INVALID
       publish(new InvalidMove)
@@ -80,7 +80,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     valid
   }
 
-  def isColumnFull(column: Int): Boolean = {
+  override def isColumnFull(column: Int): Boolean = {
     val isFull = validator.isColumnFull(column)
     if (isFull) {
       gameStatus = StatusType.FULL
@@ -89,9 +89,9 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
     isFull
   }
 
-  def removeSymbolFromColumn(column: Int): Unit = {
+  override def removeSymbolFromColumn(column: Int): Unit = {
     val lastFilledRow = validator.lastRowPosition(column)
-    grid.setupCell(Cell(column, lastFilledRow, CellType.EMPTY))
+    _grid.setupCell(Cell(column, lastFilledRow, CellType.EMPTY))
   }
 
   private def checkFinish(columnMove: Int): Unit = {
@@ -101,12 +101,14 @@ case class GridController(columns: Int, rows: Int) extends Publisher {
       gameStatus = StatusType.FINISHED
       _gameFinished = true
       publish(new PlayerWon)
-    } else if (grid.isFull) {
+    } else if (_grid.isFull) {
       gameStatus = StatusType.DRAW
       publish(new Draw)
     }
   }
 
-  def gameFinished: Boolean = _gameFinished
+  override def gameFinished: Boolean = _gameFinished
+
+  override def grid: Grid = _grid
 
 }

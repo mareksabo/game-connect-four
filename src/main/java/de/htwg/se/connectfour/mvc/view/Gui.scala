@@ -2,17 +2,17 @@ package de.htwg.se.connectfour.mvc.view
 
 import java.awt.Color
 
-import de.htwg.se.connectfour.mvc.controller.GridController
+import de.htwg.se.connectfour.mvc.controller.Controller
 import de.htwg.se.connectfour.types.CellType
 
 import scala.swing.event.Key
 import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}
 
-case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) extends Frame {
+case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame {
 
-  val columns: Int = gridController.columns
-  val rows: Int = gridController.rows
-  val statusLine = new TextField(gridController.statusText, 20)
+  val columns: Int = controller.columns
+  val rows: Int = controller.rows
+  val statusLine = new TextField(controller.statusText, 20)
 
   val blocks: Array[Array[Label]] = {
     val blocks: Array[Array[Label]] = Array.ofDim[Label](columns, rows)
@@ -28,7 +28,7 @@ case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) ext
 
   setupMainFrame()
   setupReactions
-  listenTo(gridController)
+  listenTo(controller)
 
   def setupMainFrame(): Unit = {
     val WIDTH = 700
@@ -70,10 +70,10 @@ case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) ext
         })
       }
       contents += new MenuItem(Action("Undo") {
-        gridController.undo()
+        controller.undo()
       })
       contents += new MenuItem(Action("Redo") {
-        gridController.redo()
+        controller.redo()
       })
     }
   }
@@ -104,11 +104,11 @@ case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) ext
 
   def redraw(): Unit = {
     for (i <- 0 until columns; j <- 0 until rows) redrawCell(i, j)
-    statusLine.text = gridController.statusText
+    statusLine.text = controller.statusText
   }
 
   def redrawCell(column: Int, row: Int): Unit = {
-    gridController.cell(column, row).cellType match {
+    controller.cell(column, row).cellType match {
       case CellType.FIRST =>
         blocks(column)(row).background = Color.red
       case CellType.SECOND =>
@@ -131,7 +131,7 @@ case class Gui(gridController: GridController, gamingPlayers: GamingPlayers) ext
 
   def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()
 
-  def startNewGame(): Unit = gridController.createEmptyGrid(gridController.columns, gridController.rows)
+  def startNewGame(): Unit = controller.createEmptyGrid(controller.columns, controller.rows)
 
   def quit(): Unit = sys.exit(0)
 

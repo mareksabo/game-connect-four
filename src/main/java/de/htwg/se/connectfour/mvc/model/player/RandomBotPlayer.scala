@@ -17,8 +17,6 @@ case class RandomBotPlayer(controller: Controller) extends Player {
     if (grid.isFull) return -1
     do {
       robotsColumn = r.nextInt(grid.columns)
-      println("robotsColumn: " + robotsColumn)
-      println(grid)
     } while (!validator.isColumnValidAndNotFull(robotsColumn))
     robotsColumn
   }

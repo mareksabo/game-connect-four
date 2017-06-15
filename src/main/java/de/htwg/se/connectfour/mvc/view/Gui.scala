@@ -10,11 +10,11 @@ import scala.swing._
 
 case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Frame {
 
-  val columns: Int = controller.columns
-  val rows: Int = controller.rows
+  var columns: Int = controller.columns
+  var rows: Int = controller.rows
   val statusLine = new TextField(controller.statusText, 20)
 
-  val blocks: Array[Array[Label]] = {
+  var blocks: Array[Array[Label]] = {
     val blocks: Array[Array[Label]] = Array.ofDim[Label](columns, rows)
     for (i <- 0 until rows; j <- 0 until columns) {
       blocks(j)(i) = new Label {
@@ -47,12 +47,25 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
     mainFrame.visible = true
   }
 
+  def initBlocks(): Unit = {
+      blocks = Array.ofDim[Label](columns, rows)
+      for (i <- 0 until rows; j <- 0 until columns) {
+        blocks(j)(i) = new Label {
+          opaque = true
+          horizontalAlignment
+          border = Swing.LineBorder(Color.BLACK, 1)
+        }
+    }
+  }
+
+
+  // !bug for new dimensions is probably here!
   def createPanel(): GridPanel = {
     new GridPanel(columns, rows + 1) {
       val buttons: Array[Button] = new Array[Button](rows)
       for (i <- 0 until rows) contents += Button(String.valueOf(i + 1))(buttonAction(i))
-      for (j <- 0 until columns - 1; i <- 0 until rows) {
-        contents += blocks(i)(j)
+      for (i <- 0 until rows  ; j <- 0 until columns) {
+        contents += blocks(j)(i)
       }
     }
   }
@@ -134,8 +147,8 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
     val dimensionMainFrame = new MainFrame()
     val field1 = new TextField(columns.toString)
     val field2 = new TextField(rows.toString)
-    val columLabel = new Label("column")
-    val rowLabel = new Label("row")
+    val columLabel = new Label("columns")
+    val rowLabel = new Label("rows")
     val okButton = Button("Ok")(startWithNewDimension(field1.text.toInt, field2.text.toInt, dimensionMainFrame))
     val cancelButton = Button("Cancel")(dimensionMainFrame.visible = false)
     dimensionMainFrame.contents = new GridPanel(3, 2){
@@ -152,9 +165,13 @@ case class Gui(controller: Controller, gamingPlayers: GamingPlayers) extends Fra
     dimensionMainFrame.visible = true
   }
 
-  def startWithNewDimension(column: Int, row: Int, mainFrame: MainFrame): Unit = {
-      controller.createEmptyGrid(column, row)
-      mainFrame.visible = false
+  def startWithNewDimension(cls: Int, rws: Int, mainFrame: MainFrame): Unit = {
+    columns = cls
+    rows = rws
+    mainFrame.visible = false
+    initBlocks()
+    setupMainFrame()
+    controller.createEmptyGrid(columns, rows)
   }
 
   def startNewOrQuit(startNew: Boolean): Unit = if (startNew) startNewGame() else quit()

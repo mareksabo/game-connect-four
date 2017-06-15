@@ -1,8 +1,9 @@
 package de.htwg.se.connectfour
 
+import com.google.inject.Guice
+import de.htwg.se.connectfour.mvc.controller.Controller
+import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.mvc.controller.GridController
-import de.htwg.se.connectfour.mvc.model.player.{DumbBotPlayer, RealPlayer}
 import de.htwg.se.connectfour.mvc.view.{GamingPlayers, Gui, Tui}
 
 import scala.io.StdIn
@@ -10,23 +11,24 @@ import scala.io.StdIn
 object Main extends LazyLogging{
   def main(args: Array[String]): Unit = {
 
-    val gridController = new GridController()
+    val injector = Guice.createInjector(new ConnectFourModule)
+    val controller = injector.getInstance(classOf[Controller])
     val player1 = RealPlayer("Marek")
-    val player2 = DumbBotPlayer(gridController)
-    val players = GamingPlayers(player1, player2, gridController)
+    val player2 = RandomBotPlayer(controller)
+    val players = GamingPlayers(player1, player2, controller)
 
-    startGame(gridController, players)
+    startGame(controller, players)
   }
 
-  def startGame(gridController: GridController, players: GamingPlayers): Unit = {
+  def startGame(controller: GridController, players: GamingPlayers): Unit = {
     Console.print("Do you want to start gui (y/n): ")
     val input = StdIn.readLine() //n
     if (input.equalsIgnoreCase("y")) {
       logger.info("started GUI")
-      Gui(gridController, players)
+      Gui(controller, players)
     } else {
       logger.info("started TUI")
-      Tui(gridController, players)
+      Tui(controller, players)
     }
   }
 

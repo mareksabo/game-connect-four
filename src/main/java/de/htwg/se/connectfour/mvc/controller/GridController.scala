@@ -1,39 +1,39 @@
 package de.htwg.se.connectfour.mvc.controller
 
+import com.google.inject.Inject
+import com.google.inject.name.Named
 import com.typesafe.scalalogging.{LazyLogging, Logger}
 import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
-import de.htwg.se.connectfour.mvc.view.{Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
+import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
 import de.htwg.se.connectfour.types.CellType.CellType
 import de.htwg.se.connectfour.types.StatusType.GameStatus
 import de.htwg.se.connectfour.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 
-case class GridController(columns: Int, rows: Int) extends Publisher with LazyLogging{
+case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
 
-  var grid: Grid = _
-  private var gameStatus: GameStatus = StatusType.NEW
   private val revertManager = new RevertManager
+
+  private var _grid: Grid = _
+  private var gameStatus: GameStatus = StatusType.NEW
   private var checkWinner: CheckWinner = _
   private var validator: Validator = _
   private var _gameFinished = false
 
   createEmptyGrid(columns, rows)
 
-  def this() = this(7, 6)
-
-  def createEmptyGrid(columns: Int, rows: Int): Unit = {
+  override def createEmptyGrid(columns: Int, rows: Int): Unit = {
     logger.debug("created empty grids")
-    grid = new Grid(columns, rows)
+    _grid = new GridImpl(columns, rows)
     _gameFinished = false
-    checkWinner = CheckWinner(grid)
-    validator = Validator(grid)
+    checkWinner = CheckWinner(_grid)
+    validator = Validator(_grid)
     gameStatus = StatusType.NEW
     publish(new GridChanged)
   }
 
-  def undo(): Unit = {
+  override def undo(): Unit = {
     logger.info("undid last move")
     val didUndo = revertManager.undo()
     if (didUndo) {
@@ -45,7 +45,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher with LazyLo
     }
   }
 
-  def redo(): Unit = {
+  override def redo(): Unit = {
     logger.info("redid move")
     val didRedo = revertManager.redo()
     if (didRedo) {
@@ -57,11 +57,11 @@ case class GridController(columns: Int, rows: Int) extends Publisher with LazyLo
     }
   }
 
-  def cell(col: Int, row: Int): Cell = grid.cell(col, row)
+  override def cell(col: Int, row: Int): Cell = _grid.cell(col, row)
 
-  def statusText: String = StatusType.message(gameStatus)
+  override def statusText: String = StatusType.message(gameStatus)
 
-  def checkAddCell(column: Int, cellType: CellType): Unit = {
+  override def checkAddCell(column: Int, cellType: CellType): Unit = {
     if (isInvalid(column)) return
     addCell(column, cellType)
     checkFinish(column)
@@ -77,7 +77,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher with LazyLo
   }
 
   private def isColumnValid(column: Int): Boolean = {
-    val valid = grid.isColumnValid(column)
+    val valid = _grid.isColumnValid(column)
     if (!valid) {
       logger.warn("tried to insert into invalid column: " + column)
       gameStatus = StatusType.INVALID
@@ -86,7 +86,7 @@ case class GridController(columns: Int, rows: Int) extends Publisher with LazyLo
     valid
   }
 
-  def isColumnFull(column: Int): Boolean = {
+  override def isColumnFull(column: Int): Boolean = {
     val isFull = validator.isColumnFull(column)
     if (isFull) {
       logger.warn("tried to insert into full column:  " + column)
@@ -96,9 +96,9 @@ case class GridController(columns: Int, rows: Int) extends Publisher with LazyLo
     isFull
   }
 
-  def removeSymbolFromColumn(column: Int): Unit = {
+  override def removeSymbolFromColumn(column: Int): Unit = {
     val lastFilledRow = validator.lastRowPosition(column)
-    grid.setupCell(Cell(column, lastFilledRow, CellType.EMPTY))
+    _grid.setupCell(Cell(column, lastFilledRow, CellType.EMPTY))
   }
 
   private def checkFinish(columnMove: Int): Unit = {
@@ -116,6 +116,8 @@ case class GridController(columns: Int, rows: Int) extends Publisher with LazyLo
     }
   }
 
-  def gameFinished: Boolean = _gameFinished
+  override def gameFinished: Boolean = _gameFinished
+
+  override def grid: Grid = _grid
 
 }

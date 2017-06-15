@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.controller
 
-import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
+import de.htwg.se.connectfour.mvc.model.{Cell, GridImpl}
 import de.htwg.se.connectfour.types.CellType
 import org.specs2.mutable.Specification
 
@@ -8,14 +8,14 @@ import org.specs2.mutable.Specification
 class GridControllerTest extends Specification {
   "New GridController of grid 3x2" should {
 
-    val grid = new Grid(3, 2)
+    val grid = new GridImpl(3, 2)
 
     val xCell = Cell(2, 0, CellType.SECOND)
     val oCell = Cell(0, 1, CellType.FIRST)
     grid.setupCell(xCell)
     grid.setupCell(oCell)
 
-    val gridController = new GridController(3, 2)
+    val gridController = GridController(3, 2)
 
 
     "have statusText" in {
@@ -36,7 +36,7 @@ class GridControllerTest extends Specification {
 
 
     "have won with this move (horizontal)" in {
-      val localGridController = new GridController
+      val localGridController = GridController(7, 6)
       for (_ <- 0 until 4) {
         localGridController.checkAddCell(0, CellType.FIRST)
       }

@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.view
 
-import de.htwg.se.connectfour.mvc.controller.GridController
+import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 
 import scala.io.StdIn
 import scala.swing.Reactor
@@ -9,9 +9,9 @@ import scala.swing.Reactor
   * Represents text user interface.
   * Whenever player plays turn,
   */
-case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) extends Reactor {
+case class Tui(controller: Controller, gamingPlayers: GamingPlayers) extends Reactor {
 
-  listenTo(gridController)
+  listenTo(controller)
   reactions += {
     case _: PlayerGridChanged => showGridWithMessage()
     case _: GridChanged => showGrid()
@@ -25,7 +25,7 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
   processInputLine("new 7 6")
 
   while (true) {
-    while (!gridController.gameFinished) {
+    while (!controller.gameFinished) {
       val currentPlayer = gamingPlayers.currentPlayer
       if (currentPlayer.isReal) {
         processInputLine(StdIn.readLine())
@@ -41,13 +41,13 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
     try {
       parsedInput(0) match {
         case "quit" => quit()
-        case "new" => gridController.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
-        case "undo" => 1 to parsedInput(1).toInt foreach { _ => gridController.undo() }
-        case "redo" => 1 to parsedInput(1).toInt foreach { _ => gridController.redo() }
+        case "new" => controller.createEmptyGrid(parsedInput.apply(1).toInt, parsedInput.apply(2).toInt)
+        case "undo" => 1 to parsedInput(1).toInt foreach { _ => controller.undo() }
+        case "redo" => 1 to parsedInput(1).toInt foreach { _ => controller.redo() }
         case "show" => showGridWithMessage()
         case "help" => println("Commands are: help, new <num> <num>, quit, undo <num>, redo <num>, show, <num> <num>, <num>")
 
-        case _ => if (!gridController.gameFinished) {
+        case _ => if (!controller.gameFinished) {
           gamingPlayers.applyTurn(parsedInput(0).toInt)
         } else showFinished()
       }
@@ -64,7 +64,7 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
   }
 
   def showMessage(): Unit = {
-    println(gridController.statusText)
+    println(controller.statusText)
     println("Player " + gamingPlayers.currentPlayer + " (" + gamingPlayers.currentPlayerCellType + ")"
       + " played turn.")
   }
@@ -84,7 +84,7 @@ case class Tui(gridController: GridController, gamingPlayers: GamingPlayers) ext
     println("Game is finished.")
   }
 
-  def showGrid(): Unit = println(gridController.grid)
+  def showGrid(): Unit = println(controller.grid)
 
   def showPlayAgain(): Unit = {
     showGrid()

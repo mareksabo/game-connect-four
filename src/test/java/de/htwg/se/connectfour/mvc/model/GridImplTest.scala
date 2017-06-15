@@ -3,11 +3,11 @@ package de.htwg.se.connectfour.mvc.model
 import de.htwg.se.connectfour.types.CellType
 import org.specs2.mutable.Specification
 
-class GridTest extends Specification {
+class GridImplTest extends Specification {
 
   "New Grid 3x2" should {
 
-    val grid = new Grid(3, 2)
+    val grid = new GridImpl(3, 2)
 
     val xCell = Cell(2, 0, CellType.SECOND)
     val oCell = Cell(0, 1, CellType.FIRST)
@@ -15,7 +15,7 @@ class GridTest extends Specification {
     grid.setupCell(oCell)
 
     "another new grid should be empty" in {
-      val localGrid = new Grid(7, 6)
+      val localGrid = new GridImpl(7, 6)
       for (i <- 0 to localGrid.MAX_COLUMN; j <- 0 to localGrid.MAX_ROW) {
         localGrid.cell(i, j).cellType must be_==(CellType.EMPTY)
       }
@@ -53,7 +53,7 @@ class GridTest extends Specification {
     }
 
     "grid is full" in {
-      val localGrid = new Grid(2, 3)
+      val localGrid = new GridImpl(2, 3)
       for (row <- 0 until localGrid.rows; column <- 0 until localGrid.columns) {
         localGrid.set(column, row, CellType.SECOND)
       }

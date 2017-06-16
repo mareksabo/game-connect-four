@@ -13,7 +13,7 @@ import scala.swing.Publisher
 
 case class GridController @Inject() (@Named("columns") columns: Int, @Named("rows") rows: Int) extends Publisher with Controller with LazyLogging {
 
-  private val revertManager = new RevertManager
+  private var revertManager : RevertManager = _
 
   private var _grid: Grid = _
   private var gameStatus: GameStatus = StatusType.NEW
@@ -27,6 +27,7 @@ case class GridController @Inject() (@Named("columns") columns: Int, @Named("row
     logger.debug("created empty grids")
     _grid = new GridImpl(columns, rows)
     _gameFinished = false
+    revertManager = new RevertManager
     checkWinner = CheckWinner(_grid)
     validator = Validator(_grid)
     gameStatus = StatusType.NEW

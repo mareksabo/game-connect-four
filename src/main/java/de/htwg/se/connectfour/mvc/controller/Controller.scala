@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
-import de.htwg.se.connectfour.types.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 import scala.swing.Publisher
 import scala.swing.event.Event

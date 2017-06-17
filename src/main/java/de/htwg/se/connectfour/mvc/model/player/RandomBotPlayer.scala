@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.model.player
 
-import de.htwg.se.connectfour.logic.Validator
+import de.htwg.se.connectfour.mvc.controller.logic.Validator
 import de.htwg.se.connectfour.mvc.controller.Controller
 import de.htwg.se.connectfour.mvc.model.Grid
 

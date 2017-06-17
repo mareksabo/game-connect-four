@@ -1,8 +1,8 @@
-package de.htwg.se.connectfour.logic
+package de.htwg.se.connectfour.mvc.controller.logic
 
 import de.htwg.se.connectfour.mvc.model.Grid
-import de.htwg.se.connectfour.types.CellType
-import de.htwg.se.connectfour.types.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 case class PlayedCommand(col: Int, row: Int, cellType: CellType, grid: Grid) extends Command {
 

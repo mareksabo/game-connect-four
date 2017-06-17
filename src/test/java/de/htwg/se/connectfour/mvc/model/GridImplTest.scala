@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.model
 
-import de.htwg.se.connectfour.types.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType
 import org.specs2.mutable.Specification
 
 class GridImplTest extends Specification {

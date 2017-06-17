@@ -1,6 +1,6 @@
 package de.htwg.se.connectfour.mvc.model
 
-import de.htwg.se.connectfour.types.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
 
 trait Grid {
 

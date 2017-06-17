@@ -4,7 +4,7 @@ import java.awt.Color
 
 import de.htwg.se.connectfour.mvc.controller.{Controller, Draw, FilledColumn, GridChanged, InvalidMove, PlayerGridChanged, PlayerWon}
 import de.htwg.se.connectfour.mvc.model.player.{RandomBotPlayer, RealPlayer}
-import de.htwg.se.connectfour.types.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType
 
 import scala.swing.event.{ButtonClicked, Key}
 import scala.swing.{Action, BorderPanel, Button, CheckBox, Dialog, Dimension, Frame, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Swing, TextField}

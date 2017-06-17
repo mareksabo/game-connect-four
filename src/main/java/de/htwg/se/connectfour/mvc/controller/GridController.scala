@@ -3,11 +3,11 @@ package de.htwg.se.connectfour.mvc.controller
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.typesafe.scalalogging.LazyLogging
-import de.htwg.se.connectfour.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
+import de.htwg.se.connectfour.mvc.controller.logic.{CheckWinner, PlayedCommand, RevertManager, Validator}
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid, GridImpl}
-import de.htwg.se.connectfour.types.CellType.CellType
-import de.htwg.se.connectfour.types.StatusType.GameStatus
-import de.htwg.se.connectfour.types.{CellType, StatusType}
+import de.htwg.se.connectfour.mvc.model.types.CellType.CellType
+import de.htwg.se.connectfour.mvc.model.types.StatusType.GameStatus
+import de.htwg.se.connectfour.mvc.model.types.{CellType, StatusType}
 
 import scala.swing.Publisher
 

@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.logic
+package de.htwg.se.connectfour.mvc.controller.logic
 
 trait Command {
   def execute(): Unit

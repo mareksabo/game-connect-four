@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.types
+package de.htwg.se.connectfour.mvc.model.types
 
 object CellType extends Enumeration {
   type CellType = Value

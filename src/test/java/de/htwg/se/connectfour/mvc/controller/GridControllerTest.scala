@@ -1,7 +1,7 @@
 package de.htwg.se.connectfour.mvc.controller
 
 import de.htwg.se.connectfour.mvc.model.{Cell, GridImpl}
-import de.htwg.se.connectfour.types.CellType
+import de.htwg.se.connectfour.mvc.model.types.CellType
 import org.specs2.mutable.Specification
 
 

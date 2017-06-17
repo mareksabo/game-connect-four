@@ -1,4 +1,4 @@
-package de.htwg.se.connectfour.logic
+package de.htwg.se.connectfour.mvc.controller.logic
 
 import de.htwg.se.connectfour.mvc.model.{Cell, Grid}
 

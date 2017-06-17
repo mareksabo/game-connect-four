@@ -15,13 +15,6 @@ In `de.htwg.se.connectfour`:
 - `ConnectFourModule` is configuration for dependency injection
 - `Main` is main class which is run
 
-In `types` are enum classes.
-
-In `logic`:
-- `CheckWinner` containing rules how player can win
-- `Validator` has logic validating cells in grid
-- other classes are used for undo/redo command logic
-
 In `mvc`:
 - `model` consists of simple pojo classes:
   - `Cell` represents a basic unit
@@ -30,6 +23,7 @@ In `mvc`:
     - `Player` interface defining players
     - `RealPlayer` represents real player, his/her input is read
     - `RandomBotPlayer` represents bot playing randomly
+  - `types` contains enum classes
 - `view`
   - `Gui` is graphical user interface
   - `Tui` is text user interface
@@ -38,6 +32,10 @@ In `mvc`:
   - `Controller` defines contract of grid controller
   - `MockController` is simple controller for basic testing
   - `GridController` uses model classes and creates events which are being caught by ui classes
+  - `logic`:
+    - `CheckWinner` containing rules how player can win
+    - `Validator` has logic validating cells in grid
+    - other classes are used for undo/redo command logic
   
 ### Tools used
 
